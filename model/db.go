@@ -10,17 +10,19 @@ import (
 )
 
 // InitDb 用于连接配置数据库
+var db *gorm.DB
+var err error
+
 func InitDb() {
 	dsn := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=utf8&parseTime=True&loc=Local",
 		utils.DbUser, utils.DbPassword, utils.DbHost, utils.DbPort, utils.DbName)
-	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{
+	db, err = gorm.Open(mysql.Open(dsn), &gorm.Config{
 		// 外键约束
 		DisableForeignKeyConstraintWhenMigrating: true,
 		// 禁用默认事务（提高运行速度）
 		SkipDefaultTransaction: true,
 		NamingStrategy: schema.NamingStrategy{
 			SingularTable: true, // 使用单数表名，启用该选项，此时，`User` 的表名应该是 `user`
-			NoLowerCase:   true, // 取消蛇形命名
 		},
 	})
 
