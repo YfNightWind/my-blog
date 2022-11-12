@@ -3,8 +3,8 @@ package routers
 import (
 	"fmt"
 	"github.com/gin-gonic/gin"
+	v1 "my-blog/api/v1"
 	"my-blog/utils"
-	"net/http"
 )
 
 func InitRouter() {
@@ -13,13 +13,17 @@ func InitRouter() {
 	// 路由初始化
 	r := gin.Default()
 
-	router := r.Group("api/v1")
+	routerV1 := r.Group("api/v1")
 	{
-		router.GET("hello", func(context *gin.Context) {
-			context.JSON(http.StatusOK, gin.H{
-				"msg": "ok",
-			})
-		})
+		// 用户模块的路由接口
+		routerV1.POST("user/add", v1.AddUserController)      // 添加用户
+		routerV1.GET("users", v1.GetUserListController)      // 获取用户列表
+		routerV1.PUT("user/:id", v1.EditUserController)      // 编辑用户
+		routerV1.DELETE("user/:id", v1.DeleteUserController) // 删除用户
+
+		// TODO 分类模块的路由接口
+
+		// TODO 文章模块的路由接口
 	}
 
 	err := r.Run(utils.HttpPort)
