@@ -71,7 +71,7 @@ func EditUser(id int) {
 func ScryptPassword(password string) string {
 	const keyLen = 10
 	salt := make([]byte, 8)
-	salt = []byte{自行填入8位的int值}
+	salt = []byte{自行填入8个的uint8值} // 如123, 56, 24, 62, 96, 92, 245, 65
 
 	key, err := scrypt.Key([]byte(password), salt, 16384, 8, 1, keyLen)
 	if err != nil {
