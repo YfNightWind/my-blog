@@ -1,7 +1,10 @@
 package model
 
 import (
+	"encoding/base64"
+	"golang.org/x/crypto/scrypt"
 	"gorm.io/gorm"
+	"log"
 	"my-blog/utils/errormsg"
 )
 
@@ -31,7 +34,9 @@ func IsUserExist(name string) (code int) {
 
 // AddUser 添加用户(注册)
 func AddUser(data *User) int {
-	err := db.Create(data).Error
+	// 写进数据库之前，将密码进行加密
+	data.Password = ScryptPassword(data.Password)
+	err := db.Create(&data).Error
 	if err != nil {
 		return errormsg.ERROR // 500
 	}
@@ -60,4 +65,20 @@ func GetUserList(pageSize int, pageNum int) []User {
 // EditUser 编辑用户
 func EditUser(id int) {
 
+}
+
+// ScryptPassword 密码加密
+func ScryptPassword(password string) string {
+	const keyLen = 10
+	salt := make([]byte, 8)
+	salt = []byte{自行填入8位的int值}
+
+	key, err := scrypt.Key([]byte(password), salt, 16384, 8, 1, keyLen)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	FinalPassword := base64.StdEncoding.EncodeToString(key)
+
+	return FinalPassword
 }
