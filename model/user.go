@@ -14,14 +14,14 @@ type User struct {
 	Role int `gorm:"type:int" json:"role" binding:"required"`
 }
 
-//
+// =============
 // 对数据库的操作👇
-//
+// =============
 
 // IsUserExist 查询用户是否存在
 func IsUserExist(name string) (code int) {
 	var user User
-	db.Select("id").Where("username = ?", name).First(&user) // SELECT * FROM user LIMIT 1;
+	db.Select("id").Where("username = ?", name).Find(&user) // SELECT * FROM user LIMIT 1;
 	if user.ID > 0 {
 		return errormsg.ERROR_USERNAME_USED // 1001
 	}
@@ -37,4 +37,27 @@ func AddUser(data *User) int {
 	}
 
 	return errormsg.SUCCESS // 200
+}
+
+// GetUserList 查询用户列表
+func GetUserList(pageSize int, pageNum int) []User {
+	var userList []User
+	// 分页
+	// gorm中"Cancel offset condition with -1"
+	offSet := (pageNum - 1) * pageSize
+	if pageNum == -1 && pageSize == -1 {
+		offSet = -1
+	}
+
+	err = db.Limit(pageSize).Offset(offSet).Find(&userList).Error
+
+	if err != nil && err != gorm.ErrRecordNotFound {
+		return nil
+	}
+	return userList
+}
+
+// EditUser 编辑用户
+func EditUser(id int) {
+
 }

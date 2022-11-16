@@ -5,6 +5,7 @@ import (
 	"my-blog/model"
 	"my-blog/utils/errormsg"
 	"net/http"
+	"strconv"
 )
 
 var code int
@@ -16,6 +17,7 @@ func IsUserExistController(ctx *gin.Context) {
 
 // AddUserController 添加用户
 func AddUserController(ctx *gin.Context) {
+	// TODO 用户名必须传
 	var data model.User
 	_ = ctx.ShouldBindJSON(&data)
 	code = model.IsUserExist(data.Username)
@@ -37,9 +39,17 @@ func AddUserController(ctx *gin.Context) {
 
 // TODO 查询单个用户
 
-// GetUserListController TODO 查询用户列表
+// GetUserListController 查询用户列表
 func GetUserListController(ctx *gin.Context) {
+	pageSize, _ := strconv.Atoi(ctx.Query("pagesize"))
+	pageNum, _ := strconv.Atoi(ctx.Query("pagenum"))
 
+	data := model.GetUserList(pageSize, pageNum)
+	ctx.JSON(http.StatusOK, gin.H{
+		"status": errormsg.SUCCESS,
+		"data":   data,
+		"msg":    errormsg.GetErrorMsg(errormsg.SUCCESS),
+	})
 }
 
 // EditUserController TODO 编辑用户
