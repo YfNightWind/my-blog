@@ -37,6 +37,19 @@ func AddUserController(ctx *gin.Context) {
 	})
 }
 
+// DeleteUserController 删除用户
+func DeleteUserController(ctx *gin.Context) {
+	id, _ := strconv.Atoi(ctx.Param("id"))
+	code = model.DeleteUser(id)
+
+	ctx.JSON(http.StatusOK, gin.H{
+		"status": code,
+		"data":   nil,
+		"msg":    errormsg.GetErrorMsg(code),
+	})
+
+}
+
 // TODO 查询单个用户
 
 // GetUserListController 查询用户列表
@@ -54,10 +67,5 @@ func GetUserListController(ctx *gin.Context) {
 
 // EditUserController TODO 编辑用户
 func EditUserController(ctx *gin.Context) {
-
-}
-
-// DeleteUserController TODO 删除用户
-func DeleteUserController(ctx *gin.Context) {
 
 }

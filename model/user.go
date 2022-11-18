@@ -24,7 +24,7 @@ type User struct {
 // IsUserExist 查询用户是否存在
 func IsUserExist(name string) (code int) {
 	var user User
-	db.Select("id").Where("username = ?", name).Find(&user) // SELECT * FROM user LIMIT 1;
+	db.Select("id").Where("username = ? ", name).Find(&user) // SELECT * FROM user LIMIT 1;
 	if user.ID > 0 {
 		return errormsg.ERROR_USERNAME_USED // 1001
 	}
@@ -34,14 +34,24 @@ func IsUserExist(name string) (code int) {
 
 // AddUser 添加用户(注册)
 func AddUser(data *User) int {
-	// 写进数据库之前，将密码进行加密
-	data.Password = ScryptPassword(data.Password)
+	// 写进数据库之前，需要将密码进行加密
+	// 通过钩子函数来实现
 	err := db.Create(&data).Error
 	if err != nil {
 		return errormsg.ERROR // 500
 	}
 
 	return errormsg.SUCCESS // 200
+}
+
+// DeleteUser 删除用户
+func DeleteUser(id int) int {
+	err = db.Where("id = ? ", id).Delete(&User{}).Error
+	if err != nil {
+		return errormsg.ERROR
+	}
+
+	return errormsg.SUCCESS
 }
 
 // GetUserList 查询用户列表
@@ -71,7 +81,7 @@ func EditUser(id int) {
 func ScryptPassword(password string) string {
 	const keyLen = 10
 	salt := make([]byte, 8)
-	salt = []byte{自行填入8位的int值}
+	salt = []byte{143, 255, 82, 23, 90, 123, 45}
 
 	key, err := scrypt.Key([]byte(password), salt, 16384, 8, 1, keyLen)
 	if err != nil {
@@ -81,4 +91,11 @@ func ScryptPassword(password string) string {
 	FinalPassword := base64.StdEncoding.EncodeToString(key)
 
 	return FinalPassword
+}
+
+// BeforeSave 开始事务前，由GORM处理
+func (u *User) BeforeSave(_ *gorm.DB) (err error) {
+	// 密码加密
+	u.Password = ScryptPassword(u.Password)
+	return
 }
