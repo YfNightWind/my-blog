@@ -5,6 +5,7 @@ import (
 	"golang.org/x/crypto/scrypt"
 	"gorm.io/gorm"
 	"log"
+	"my-blog/utils"
 	"my-blog/utils/errormsg"
 )
 
@@ -80,10 +81,8 @@ func EditUser(id int) {
 // ScryptPassword 密码加密
 func ScryptPassword(password string) string {
 	const keyLen = 10
-	salt := make([]byte, 8)
-	salt = []byte{143, 255, 82, 23, 90, 123, 45}
 
-	key, err := scrypt.Key([]byte(password), salt, 16384, 8, 1, keyLen)
+	key, err := scrypt.Key([]byte(password), utils.Salt, 16384, 8, 1, keyLen)
 	if err != nil {
 		log.Fatal(err)
 	}
