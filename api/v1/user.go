@@ -47,7 +47,6 @@ func DeleteUserController(ctx *gin.Context) {
 		"data":   nil,
 		"msg":    errormsg.GetErrorMsg(code),
 	})
-
 }
 
 // TODO 查询单个用户
@@ -65,7 +64,26 @@ func GetUserListController(ctx *gin.Context) {
 	})
 }
 
-// EditUserController TODO 编辑用户
+// EditUserController 编辑用户
+// TODO 判断用户已被软删除之后如何解决
 func EditUserController(ctx *gin.Context) {
+	var data model.User
+	id, _ := strconv.Atoi(ctx.Param("id"))
+	_ = ctx.ShouldBindJSON(&data)
 
+	// 修改用户名时候，检查更新后的用户名是否存在
+	code = model.IsUserExist(data.Username)
+
+	if code == errormsg.SUCCESS {
+		model.EditUser(id, &data)
+	}
+
+	if code == errormsg.ERROR_USERNAME_USED {
+		ctx.Abort()
+	}
+
+	ctx.JSON(http.StatusOK, gin.H{
+		"status": code,
+		"msg":    errormsg.GetErrorMsg(code),
+	})
 }

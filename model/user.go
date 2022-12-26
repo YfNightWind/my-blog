@@ -45,7 +45,7 @@ func AddUser(data *User) int {
 	return errormsg.SUCCESS // 200
 }
 
-// DeleteUser 删除用户
+// DeleteUser 删除用户(soft delete)
 func DeleteUser(id int) int {
 	err = db.Where("id = ? ", id).Delete(&User{}).Error
 	if err != nil {
@@ -73,9 +73,19 @@ func GetUserList(pageSize int, pageNum int) []User {
 	return userList
 }
 
-// EditUser 编辑用户
-func EditUser(id int) {
+// EditUser 编辑用户信息
+func EditUser(id int, data *User) int {
+	var userMap = make(map[string]interface{})
+	userMap["username"] = data.Username
+	userMap["role"] = data.Role
 
+	// 更新
+	err := db.Model(&User{}).Where("id = ?", id).Updates(userMap).Error
+	if err != nil {
+		return errormsg.ERROR
+	}
+
+	return errormsg.SUCCESS
 }
 
 // ScryptPassword 密码加密
