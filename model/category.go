@@ -1,0 +1,80 @@
+package model
+
+import (
+	"gorm.io/gorm"
+	"my-blog/utils/errormsg"
+)
+
+type Category struct {
+	ID   uint   `gorm:"primary_key;auto_increment" json:"id"`
+	Name string `gorm:"type:varchar(20);not null" json:"name"`
+}
+
+// =============
+// 对数据库的操作👇
+// =============
+
+// IsCategoryExist 查询分类是否存在
+func IsCategoryExist(name string) (code int) {
+	var category Category
+	db.Select("id").Where("name = ? ", name).Find(&category) // SELECT * FROM category LIMIT 1;
+	if category.ID > 0 {
+		return errormsg.ERROR_CATEGORYNAME_USED // 1001
+	}
+
+	return errormsg.SUCCESS // 200
+}
+
+// CreateCategory 添加分类
+func CreateCategory(data *Category) int {
+	err := db.Create(&data).Error
+	if err != nil {
+		return errormsg.ERROR // 500
+	}
+
+	return errormsg.SUCCESS // 200
+}
+
+// GetCategoryList 查询分类列表
+func GetCategoryList(pageSize int, pageNum int) []Category {
+	var categoryList []Category
+	// 分页
+	// gorm中"Cancel offset condition with -1"
+	offSet := (pageNum - 1) * pageSize
+	if pageNum == -1 && pageSize == -1 {
+		offSet = -1
+	}
+
+	err = db.Limit(pageSize).Offset(offSet).Find(&categoryList).Error
+
+	if err != nil && err != gorm.ErrRecordNotFound {
+		return nil
+	}
+	return categoryList
+}
+
+// EditCategory 编辑分类信息
+func EditCategory(id int, data *Category) int {
+	var categoryMap = make(map[string]interface{})
+	categoryMap["name"] = data.Name
+
+	// 更新
+	err := db.Model(&Category{}).Where("id = ?", id).Updates(categoryMap).Error
+	if err != nil {
+		return errormsg.ERROR
+	}
+
+	return errormsg.SUCCESS
+}
+
+// DeleteCategory 删除分类
+func DeleteCategory(id int) int {
+	err = db.Where("id = ? ", id).Delete(&Category{}).Error
+	if err != nil {
+		return errormsg.ERROR
+	}
+
+	return errormsg.SUCCESS
+}
+
+// TODO 查询分类下的所有文章

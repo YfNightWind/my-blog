@@ -21,8 +21,11 @@ func InitRouter() {
 		routerV1.PUT("user/:id", v1.EditUserController)      // 编辑用户
 		routerV1.DELETE("user/:id", v1.DeleteUserController) // 删除用户
 
-		// TODO 分类模块的路由接口
-
+		// 分类模块的路由接口
+		routerV1.POST("category/add", v1.CreateCategoryController)   // 添加分类
+		routerV1.GET("category", v1.GetCategoryListController)       // 获取分类列表
+		routerV1.PUT("category/:id", v1.EditCategoryController)      // 编辑分类
+		routerV1.DELETE("category/:id", v1.DeleteCategoryController) // 删除分类
 		// TODO 文章模块的路由接口
 	}
 
