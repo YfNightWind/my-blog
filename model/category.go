@@ -19,7 +19,7 @@ func IsCategoryExist(name string) (code int) {
 	var category Category
 	db.Select("id").Where("name = ? ", name).Find(&category) // SELECT * FROM category LIMIT 1;
 	if category.ID > 0 {
-		return errormsg.ERROR_CATEGORYNAME_USED // 1001
+		return errormsg.ERROR_CATEGORYNAME_USED // 3001
 	}
 
 	return errormsg.SUCCESS // 200
