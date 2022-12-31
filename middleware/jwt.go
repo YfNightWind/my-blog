@@ -56,8 +56,8 @@ func VerifyToken(reqToken string) (*MyClaims, int) {
 }
 
 // JwtToken jwt中间件
-func JwtToken(ctx *gin.Context) gin.HandlerFunc {
-	return func(context *gin.Context) {
+func JwtToken() gin.HandlerFunc {
+	return func(ctx *gin.Context) {
 		//tokenHeader := ctx.Request.Header.Get("Authorization")
 		tokenHeader := ctx.GetHeader("Authorization")
 
