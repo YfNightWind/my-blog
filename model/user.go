@@ -102,6 +102,30 @@ func ScryptPassword(password string) string {
 	return FinalPassword
 }
 
+// VerifyLogin 登录验证
+func VerifyLogin(username string, password string) int {
+	var user User
+
+	db.Where("username = ?", username).Find(&user)
+
+	// 用户名错误或不存在
+	if user.ID == 0 {
+		return errormsg.ERROR_USER_NOT_EXIST
+	}
+
+	//密码错误
+	if ScryptPassword(password) != user.Password {
+		return errormsg.ERROR_PASSWORD_WRONG
+	}
+
+	// 无权限登录后台
+	if user.Role != 0 {
+		return errormsg.ERROR_NO_PERMISSION
+	}
+
+	return errormsg.SUCCESS
+}
+
 // BeforeSave 开始事务前，由GORM处理
 func (u *User) BeforeSave(_ *gorm.DB) (err error) {
 	// 密码加密
