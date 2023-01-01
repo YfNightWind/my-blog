@@ -3,14 +3,16 @@ package errormsg
 const (
 	SUCCESS = 200
 	ERROR   = 500
+
 	// cpde = 100...用户模块的错误
 	ERROR_USERNAME_USED    = 1001
 	ERROR_PASSWORD_WRONG   = 1002
 	ERROR_USER_NOT_EXIST   = 1003
-	ERROR_TOKEN_NOT_EXIST  = 1004
-	ERROR_TOKEN_RUNTIME    = 1005
-	ERROR_TOKEN_WRONG      = 1006
-	ERROR_TOKEN_TYPE_WRONG = 1007
+	ERROR_NO_PERMISSION    = 1004
+	ERROR_TOKEN_NOT_EXIST  = 1005
+	ERROR_TOKEN_RUNTIME    = 1006
+	ERROR_TOKEN_WRONG      = 1007
+	ERROR_TOKEN_TYPE_WRONG = 1008
 
 	// code = 200...文章模块的错误
 	ERROR_ARTICLE_NOT_EXIST = 2001
@@ -21,11 +23,13 @@ const (
 )
 
 var codeMsg = map[int]string{
-	SUCCESS:                "成功！",
-	ERROR:                  "错误",
+	SUCCESS: "成功！",
+	ERROR:   "错误",
+
 	ERROR_USERNAME_USED:    "用户名已被使用",
 	ERROR_PASSWORD_WRONG:   "用户密码错误",
 	ERROR_USER_NOT_EXIST:   "该用户不存在",
+	ERROR_NO_PERMISSION:    "用户无管理员权限",
 	ERROR_TOKEN_NOT_EXIST:  "token不存在",
 	ERROR_TOKEN_RUNTIME:    "token过期",
 	ERROR_TOKEN_WRONG:      "token错误",
