@@ -11,7 +11,6 @@ import (
 )
 
 var JwtKey = []byte(utils.JwtKey)
-var code int
 
 type MyClaims struct {
 	Username string `json:"username"`
@@ -24,7 +23,7 @@ func GenerateToken(username string) (string, int) {
 		// 使用用户名和密码生成
 		Username: username,
 		RegisteredClaims: jwt.RegisteredClaims{
-			ExpiresAt: jwt.NewNumericDate(time.Now().Add(10 * time.Hour)), // 10天
+			ExpiresAt: jwt.NewNumericDate(time.Now().Add(10 * time.Hour * time.Duration(1))), // 10天
 			IssuedAt:  jwt.NewNumericDate(time.Now()),
 			NotBefore: jwt.NewNumericDate(time.Now()),
 			Issuer:    "AlexLin",
@@ -36,15 +35,15 @@ func GenerateToken(username string) (string, int) {
 	if err != nil {
 		return "", errormsg.ERROR
 	}
-
 	return token, errormsg.SUCCESS
 
 }
 
 // VerifyToken 验证token
 func VerifyToken(reqToken string) (*MyClaims, int) {
-	token, _ := jwt.ParseWithClaims(reqToken, &MyClaims{}, func(token *jwt.Token) (interface{}, error) {
-		return token, nil
+	var claims MyClaims
+	token, _ := jwt.ParseWithClaims(reqToken, &claims, func(token *jwt.Token) (interface{}, error) {
+		return JwtKey, nil
 	})
 
 	// https://pkg.go.dev/github.com/golang-jwt/jwt/v4#ParseWithClaims
@@ -58,6 +57,7 @@ func VerifyToken(reqToken string) (*MyClaims, int) {
 // JwtToken jwt中间件
 func JwtToken() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
+		var code int
 		//tokenHeader := ctx.Request.Header.Get("Authorization")
 		tokenHeader := ctx.GetHeader("Authorization")
 
@@ -75,9 +75,18 @@ func JwtToken() gin.HandlerFunc {
 			return
 		}
 
-		checkToken := strings.SplitN(tokenHeader, " ", 2)
+		checkToken := strings.Split(tokenHeader, " ")
+		if len(checkToken) == 0 {
+			code = errormsg.ERROR_TOKEN_TYPE_WRONG
+			ctx.JSON(http.StatusOK, gin.H{
+				"code": code,
+				"msg":  errormsg.GetErrorMsg(code),
+			})
+			ctx.Abort()
+			return
+		}
 
-		if len(checkToken) != 2 && checkToken[0] != "Bearer" {
+		if len(checkToken) != 2 || checkToken[0] != "Bearer" {
 			code = errormsg.ERROR_TOKEN_TYPE_WRONG
 			ctx.JSON(http.StatusOK, gin.H{
 				"code": code,
@@ -88,7 +97,6 @@ func JwtToken() gin.HandlerFunc {
 		}
 
 		key, tCode := VerifyToken(checkToken[1])
-
 		if tCode == errormsg.ERROR {
 			code = errormsg.ERROR_TOKEN_WRONG
 			ctx.JSON(http.StatusOK, gin.H{
