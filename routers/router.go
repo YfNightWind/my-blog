@@ -44,6 +44,9 @@ func InitRouter() {
 		authorized.POST("article/add", v1.CreateArticleController)   // 添加文章
 		authorized.PUT("article/:id", v1.EditArticleController)      // 编辑文章
 		authorized.DELETE("article/:id", v1.DeleteArticleController) // 删除文章
+
+		// 上传
+		authorized.POST("upload", v1.UploadController) // 上传文件
 	}
 
 	err := r.Run(utils.HttpPort)
