@@ -10,7 +10,6 @@ var (
 	HttpPort string
 	JwtKey   string
 
-	Db         string
 	DbHost     string
 	DbPort     string
 	DbUser     string
@@ -40,11 +39,10 @@ func init() {
 func LoadServer(file *ini.File) {
 	AppMode = file.Section("server").Key("AppMode").MustString("debug")
 	HttpPort = file.Section("server").Key("HttpPort").MustString(":3000")
-	JwtKey = file.Section("server").Key("JwtKet").MustString("7his1s$Bl2gJwt3*")
+	JwtKey = file.Section("server").Key("JwtKet").MustString("blog-key")
 }
 
 func LoadData(file *ini.File) {
-	Db = file.Section("database").Key("Db").MustString("mysql")
 	DbHost = file.Section("database").Key("DbHost").MustString("127.0.0.1")
 	DbPort = file.Section("database").Key("DbPort").MustString("3306")
 	DbUser = file.Section("database").Key("DbUser").MustString("")
