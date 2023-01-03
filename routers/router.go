@@ -12,7 +12,9 @@ func InitRouter() {
 	gin.SetMode(utils.AppMode)
 
 	// 路由初始化
-	r := gin.Default()
+	r := gin.New()
+	r.Use(gin.Recovery())
+	r.Use(middleware.Log()) // 使用自定义日志中间件
 
 	// 公共部分
 	public := r.Group("api/v1")
