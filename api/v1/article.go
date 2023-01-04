@@ -39,10 +39,11 @@ func GetArticleListController(ctx *gin.Context) {
 	pageSize, _ := strconv.Atoi(ctx.Query("pagesize"))
 	pageNum, _ := strconv.Atoi(ctx.Query("pagenum"))
 
-	data, code := model.GetArticleList(pageSize, pageNum)
+	data, code, total := model.GetArticleList(pageSize, pageNum)
 	ctx.JSON(http.StatusOK, gin.H{
 		"status": code,
 		"data":   data,
+		"total":  total,
 		"msg":    errormsg.GetErrorMsg(errormsg.SUCCESS),
 	})
 }
@@ -53,11 +54,12 @@ func GetCategoryArticleListController(ctx *gin.Context) {
 	pageSize, _ := strconv.Atoi(ctx.Query("pagesize"))
 	pageNum, _ := strconv.Atoi(ctx.Query("pagenum"))
 
-	data, code := model.GetCategoryArticleList(id, pageSize, pageNum)
+	data, code, total := model.GetCategoryArticleList(id, pageSize, pageNum)
 
 	ctx.JSON(http.StatusOK, gin.H{
 		"status": code,
 		"data":   data,
+		"total":  total,
 		"msg":    errormsg.GetErrorMsg(code),
 	})
 }

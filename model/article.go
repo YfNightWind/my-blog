@@ -31,20 +31,21 @@ func IsArticleExist(name string) (code int) {
 }
 
 // GetCategoryArticleList 查询分类下所有文章
-func GetCategoryArticleList(id int, pageSize int, pageNum int) ([]Article, int) {
+func GetCategoryArticleList(id int, pageSize int, pageNum int) ([]Article, int, int64) {
 	var categoryArticle []Article
+	var total int64
 
 	offSet := (pageNum - 1) * pageSize
 	if pageNum == -1 && pageSize == -1 {
 		offSet = -1
 	}
-	err := db.Preload("Category").Limit(pageSize).Offset(offSet).Where("cid = ?", id).Find(&categoryArticle).Error
+	err := db.Preload("Category").Limit(pageSize).Offset(offSet).Where("cid = ?", id).Find(&categoryArticle).Count(&total).Error
 
 	if err != nil {
-		return nil, errormsg.ERROR_CATEGORY_NOT_EXIST
+		return nil, errormsg.ERROR_CATEGORY_NOT_EXIST, 0
 	}
 
-	return categoryArticle, errormsg.SUCCESS
+	return categoryArticle, errormsg.SUCCESS, total
 }
 
 // GetArticleInfo 查询文章信息
@@ -70,8 +71,9 @@ func CreateArticle(data *Article) int {
 }
 
 // GetArticleList 查询文章列表
-func GetArticleList(pageSize int, pageNum int) ([]Article, int) {
+func GetArticleList(pageSize int, pageNum int) ([]Article, int, int64) {
 	var articleList []Article
+	var total int64
 	// 分页
 	// gorm中"Cancel offset condition with -1"
 	offSet := (pageNum - 1) * pageSize
@@ -79,12 +81,12 @@ func GetArticleList(pageSize int, pageNum int) ([]Article, int) {
 		offSet = -1
 	}
 
-	err = db.Preload("Category").Limit(pageSize).Offset(offSet).Find(&articleList).Error
+	err = db.Preload("Category").Limit(pageSize).Offset(offSet).Find(&articleList).Count(&total).Error
 
 	if err != nil && err != gorm.ErrRecordNotFound {
-		return nil, errormsg.ERROR
+		return nil, errormsg.ERROR, 0
 	}
-	return articleList, errormsg.SUCCESS
+	return articleList, errormsg.SUCCESS, total
 }
 
 // EditArticle 编辑文章信息

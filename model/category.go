@@ -36,8 +36,9 @@ func CreateCategory(data *Category) int {
 }
 
 // GetCategoryList 查询分类列表
-func GetCategoryList(pageSize int, pageNum int) []Category {
+func GetCategoryList(pageSize int, pageNum int) ([]Category, int64) {
 	var categoryList []Category
+	var total int64
 	// 分页
 	// gorm中"Cancel offset condition with -1"
 	offSet := (pageNum - 1) * pageSize
@@ -45,12 +46,12 @@ func GetCategoryList(pageSize int, pageNum int) []Category {
 		offSet = -1
 	}
 
-	err = db.Limit(pageSize).Offset(offSet).Find(&categoryList).Error
+	err = db.Limit(pageSize).Offset(offSet).Find(&categoryList).Count(&total).Error
 
 	if err != nil && err != gorm.ErrRecordNotFound {
-		return nil
+		return nil, 0
 	}
-	return categoryList
+	return categoryList, total
 }
 
 // EditCategory 编辑分类信息
@@ -76,5 +77,3 @@ func DeleteCategory(id int) int {
 
 	return errormsg.SUCCESS
 }
-
-// TODO 查询分类下的所有文章

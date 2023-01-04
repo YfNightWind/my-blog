@@ -11,11 +11,6 @@ import (
 
 var code int
 
-// IsUserExistController TODO 查询用户是否存在
-func IsUserExistController(ctx *gin.Context) {
-
-}
-
 // AddUserController 添加用户
 func AddUserController(ctx *gin.Context) {
 	var data model.User
@@ -35,10 +30,6 @@ func AddUserController(ctx *gin.Context) {
 	if code == errormsg.SUCCESS {
 		// 写进数据库
 		model.AddUser(&data)
-	}
-	if code == errormsg.ERROR_USERNAME_USED {
-		// 用户已存在 返回1001
-		code = errormsg.ERROR_USERNAME_USED
 	}
 
 	ctx.JSON(http.StatusOK, gin.H{
@@ -66,10 +57,11 @@ func GetUserListController(ctx *gin.Context) {
 	pageSize, _ := strconv.Atoi(ctx.Query("pagesize"))
 	pageNum, _ := strconv.Atoi(ctx.Query("pagenum"))
 
-	data := model.GetUserList(pageSize, pageNum)
+	data, total := model.GetUserList(pageSize, pageNum)
 	ctx.JSON(http.StatusOK, gin.H{
 		"status": errormsg.SUCCESS,
 		"data":   data,
+		"total":  total,
 		"msg":    errormsg.GetErrorMsg(errormsg.SUCCESS),
 	})
 }

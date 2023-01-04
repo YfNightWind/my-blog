@@ -17,10 +17,6 @@ func CreateCategoryController(ctx *gin.Context) {
 		// 写进数据库
 		model.CreateCategory(&data)
 	}
-	if code == errormsg.ERROR_CATEGORYNAME_USED {
-		// 用户已存在 返回1001
-		code = errormsg.ERROR_CATEGORYNAME_USED
-	}
 
 	ctx.JSON(http.StatusOK, gin.H{
 		"status": code,
@@ -46,10 +42,11 @@ func GetCategoryListController(ctx *gin.Context) {
 	pageSize, _ := strconv.Atoi(ctx.Query("pagesize"))
 	pageNum, _ := strconv.Atoi(ctx.Query("pagenum"))
 
-	data := model.GetCategoryList(pageSize, pageNum)
+	data, total := model.GetCategoryList(pageSize, pageNum)
 	ctx.JSON(http.StatusOK, gin.H{
 		"status": errormsg.SUCCESS,
 		"data":   data,
+		"total":  total,
 		"msg":    errormsg.GetErrorMsg(errormsg.SUCCESS),
 	})
 }
@@ -76,5 +73,3 @@ func EditCategoryController(ctx *gin.Context) {
 		"msg":    errormsg.GetErrorMsg(code),
 	})
 }
-
-// TODO 查询分类下的所有文章

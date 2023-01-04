@@ -56,8 +56,9 @@ func DeleteUser(id int) int {
 }
 
 // GetUserList 查询用户列表
-func GetUserList(pageSize int, pageNum int) []User {
+func GetUserList(pageSize int, pageNum int) ([]User, int64) {
 	var userList []User
+	var total int64
 	// 分页
 	// gorm中"Cancel offset condition with -1"
 	offSet := (pageNum - 1) * pageSize
@@ -65,12 +66,12 @@ func GetUserList(pageSize int, pageNum int) []User {
 		offSet = -1
 	}
 
-	err = db.Limit(pageSize).Offset(offSet).Find(&userList).Error
+	err = db.Limit(pageSize).Offset(offSet).Find(&userList).Count(&total).Error
 
 	if err != nil && err != gorm.ErrRecordNotFound {
-		return nil
+		return nil, 0
 	}
-	return userList
+	return userList, total
 }
 
 // EditUser 编辑用户信息
