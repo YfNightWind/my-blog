@@ -20,7 +20,7 @@ type MyClaims struct {
 // GenerateToken 生成token
 func GenerateToken(username string) (string, int) {
 	userClaim := MyClaims{
-		// 使用用户名和密码生成
+		// 使用用户名生成
 		Username: username,
 		RegisteredClaims: jwt.RegisteredClaims{
 			ExpiresAt: jwt.NewNumericDate(time.Now().Add(10 * time.Hour * time.Duration(1))), // 10天
