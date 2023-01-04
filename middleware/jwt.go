@@ -58,7 +58,6 @@ func VerifyToken(reqToken string) (*MyClaims, int) {
 func JwtToken() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		var code int
-		//tokenHeader := ctx.Request.Header.Get("Authorization")
 		tokenHeader := ctx.GetHeader("Authorization")
 
 		//
