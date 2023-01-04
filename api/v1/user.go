@@ -4,6 +4,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"my-blog/model"
 	"my-blog/utils/errormsg"
+	"my-blog/utils/validator"
 	"net/http"
 	"strconv"
 )
@@ -17,9 +18,19 @@ func IsUserExistController(ctx *gin.Context) {
 
 // AddUserController 添加用户
 func AddUserController(ctx *gin.Context) {
-	// TODO 用户名必须传
 	var data model.User
+	var msg string
 	_ = ctx.ShouldBindJSON(&data)
+
+	msg, code = validator.Validate(&data)
+	if code != errormsg.SUCCESS {
+		ctx.JSON(http.StatusOK, gin.H{
+			"status": code,
+			"msg":    msg,
+		})
+		return
+	}
+
 	code = model.IsUserExist(data.Username)
 	if code == errormsg.SUCCESS {
 		// 写进数据库
@@ -32,7 +43,6 @@ func AddUserController(ctx *gin.Context) {
 
 	ctx.JSON(http.StatusOK, gin.H{
 		"status": code,
-		"data":   data,
 		"msg":    errormsg.GetErrorMsg(code),
 	})
 }

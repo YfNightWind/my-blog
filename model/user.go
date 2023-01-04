@@ -12,10 +12,10 @@ import (
 type User struct {
 	// gorm.Model 提供了以下四个字段: ID, CreatedAt, UpdatedAt, DeletedAt
 	gorm.Model
-	Username string `gorm:"type:varchar(20);not null" json:"username" binding:"required"`
-	Password string `gorm:"type:varchar(20);not null" json:"password" binding:"required"`
-	// 0-admin 1-reader
-	Role int `gorm:"type:int" json:"role" binding:"required"`
+	Username string `gorm:"type:varchar(20);not null" json:"username" validate:"required,min=4,max=15" label:"用户名"`
+	Password string `gorm:"type:varchar(20);not null" json:"password" validate:"required,min=6,max=20" label:"密码"`
+	// 0无权限，1为管理员
+	Role int `gorm:"type:int;default:2" json:"role" validate:"required,gte=2" label:"角色码"`
 }
 
 // =============
@@ -119,7 +119,7 @@ func VerifyLogin(username string, password string) int {
 	}
 
 	// 无权限登录后台
-	if user.Role != 0 {
+	if user.Role != 1 {
 		return errormsg.ERROR_NO_PERMISSION
 	}
 
