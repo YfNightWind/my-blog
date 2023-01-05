@@ -14,7 +14,8 @@ func InitRouter() {
 	// 路由初始化
 	r := gin.New()
 	r.Use(gin.Recovery())
-	r.Use(middleware.Log()) // 使用自定义日志中间件
+	r.Use(middleware.Log())  // 使用自定义日志中间件
+	r.Use(middleware.Cors()) // 跨域中间件
 
 	// 公共部分
 	public := r.Group("api/v1")
