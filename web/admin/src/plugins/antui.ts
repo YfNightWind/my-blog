@@ -1,5 +1,15 @@
 import { createApp } from "vue"
-import {Button} from "ant-design-vue"
+import { Button, Input, Form , message } from "ant-design-vue"
+import "ant-design-vue/es/message/style/css";
 import AppVue from "@/App.vue"
 
-createApp(AppVue).use(Button)
+message.config({
+    top: `60px`,
+    duration: 2,
+    maxCount: 3,
+  });
+
+createApp(AppVue)
+    .use(Button)
+    .use(Form)
+    .use(Input)

@@ -7,9 +7,9 @@ import axios from "axios";
 import VueAxios from "vue-axios"
 
 import "./assets/main.css";
-import "./plugins/antui";
+import "./plugins/antui.ts";
 
-axios.defaults.baseURL = "http:localhost:3000/api/v1";
+axios.defaults.baseURL = "http://localhost:3000/api/v1";
 VueAxios.prototype.http = axios;
 
 const app = createApp(App);

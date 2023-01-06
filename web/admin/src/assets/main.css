@@ -6,9 +6,8 @@ body,
   height: 100%;
   margin: 0;
   padding: 0;
-  font-weight: normal;
 }
-
+/* 
 a,
 .green {
   text-decoration: none;
@@ -33,4 +32,4 @@ a,
     grid-template-columns: 1fr 1fr;
     padding: 0 2rem;
   }
-}
+} */
