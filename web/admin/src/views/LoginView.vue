@@ -30,6 +30,7 @@
           type="primary"
           html-type="submit"
           class="login-form-button"
+          @keyup.enter="onFinish"
         >
           登录
         </a-button>
@@ -71,12 +72,12 @@ export default defineComponent({
       ],
     };
     const onFinish = async (values: any) => {
-      var result: any = await axios.post("/login", formState);
-      console.log(result);
+      values = await axios.post("/login", formState);
+      console.log(values);
 
-      var statusCode: number = result.data.status;
-      var msg: string = result.data.msg;
-      var token: string = result.data.token;
+      let statusCode: number = values.data.status;
+      let msg: string = values.data.msg;
+      let token: string = values.data.token;
 
       if (statusCode != 200) {
         return message.error(msg);
