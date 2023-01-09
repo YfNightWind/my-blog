@@ -31,6 +31,8 @@ declare module '@vue/runtime-core' {
     ATable: typeof import('ant-design-vue/es')['Table']
     ATag: typeof import('ant-design-vue/es')['Tag']
     CategoryList: typeof import('./src/components/admin/category/CategoryList.vue')['default']
+    ElTable: typeof import('element-plus/es')['ElTable']
+    ElTableColumn: typeof import('element-plus/es')['ElTableColumn']
     Footer: typeof import('./src/components/admin/Footer.vue')['default']
     Header: typeof import('./src/components/admin/Header.vue')['default']
     HelloWorld: typeof import('./src/components/HelloWorld.vue')['default']
