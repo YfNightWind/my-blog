@@ -54,10 +54,11 @@ func DeleteUserController(ctx *gin.Context) {
 
 // GetUserListController 查询用户列表
 func GetUserListController(ctx *gin.Context) {
+	username := ctx.Query("username")
 	pageSize, _ := strconv.Atoi(ctx.Query("pagesize"))
 	pageNum, _ := strconv.Atoi(ctx.Query("pagenum"))
 
-	data, total := model.GetUserList(pageSize, pageNum)
+	data, total := model.GetUserList(username, pageSize, pageNum)
 	ctx.JSON(http.StatusOK, gin.H{
 		"status": errormsg.SUCCESS,
 		"data":   data,

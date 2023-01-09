@@ -56,7 +56,7 @@ func DeleteUser(id int) int {
 }
 
 // GetUserList 查询用户列表
-func GetUserList(pageSize int, pageNum int) ([]User, int64) {
+func GetUserList(username string, pageSize int, pageNum int) ([]User, int64) {
 	var userList []User
 	var total int64
 	// 分页
@@ -66,12 +66,26 @@ func GetUserList(pageSize int, pageNum int) ([]User, int64) {
 		offSet = -1
 	}
 
-	err = db.Limit(pageSize).Offset(offSet).Find(&userList).Count(&total).Error
+	// 查询所有用户
+	if username == "" {
+		err = db.Limit(pageSize).Offset(offSet).Find(&userList).Count(&total).Error
 
-	if err != nil && err != gorm.ErrRecordNotFound {
-		return nil, 0
+		if err != nil && err != gorm.ErrRecordNotFound {
+			return nil, 0
+		}
+
+		return userList, total
+	} else {
+		// 模糊查询
+		err = db.Where("username LIKE ?", username+"%").Limit(pageSize).Offset(offSet).Find(&userList).Count(&total).Error
+
+		if err != nil && err != gorm.ErrRecordNotFound {
+			return nil, 0
+		}
+
+		return userList, total
 	}
-	return userList, total
+
 }
 
 // EditUser 编辑用户信息
