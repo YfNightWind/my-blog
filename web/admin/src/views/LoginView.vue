@@ -83,7 +83,7 @@ export default defineComponent({
         return message.error(msg);
       } else {
         window.localStorage.setItem("token", token);
-        router.push("/");
+        router.push("/index");
       }
     };
 
