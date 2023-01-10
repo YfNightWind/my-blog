@@ -77,14 +77,12 @@
           ></a-input-password>
         </a-form-item>
         <a-form-item label="是否为管理员" name="role">
-          <a-select
-            defaultValue="2"
-            @change="adminChange"
-            v-model:value="userInfo.role"
-          >
-            <a-select-option key="1" value="1">是</a-select-option>
-            <a-select-option key="2" value="2">否</a-select-option>
-          </a-select>
+          <a-switch
+            v-model:checked="checked"
+            @click="adminChange"
+            checked-children="是"
+            un-checked-children="否"
+          />
         </a-form-item>
       </a-form>
     </a-modal>
@@ -114,14 +112,12 @@
           <a-input v-model:value="userInfo.username"></a-input>
         </a-form-item>
         <a-form-item label="是否为管理员" name="role">
-          <a-select
-            defaultValue="2"
-            @change="adminChange"
-            v-model:value="userInfo.role"
-          >
-            <a-select-option key="1" value="1">是</a-select-option>
-            <a-select-option key="2" value="2">否</a-select-option>
-          </a-select>
+          <a-switch
+            v-model:checked="checked"
+            @click="adminChange"
+            checked-children="是"
+            un-checked-children="否"
+          />
         </a-form-item>
       </a-form>
     </a-modal>
@@ -269,6 +265,7 @@ export default defineComponent({
     // 新增用户
     //
     const addUserRef = ref();
+    const checked = ref<boolean>(false);
     const userInfo = reactive({
       username: "",
       password: "",
@@ -338,8 +335,13 @@ export default defineComponent({
       addUserVisible.value = false;
     };
 
-    const adminChange = (value: number) => {
-      userInfo.role = Number(value);
+    const adminChange = (checked: Boolean) => {
+      if (checked) {
+        userInfo.role = 1;
+      } else {
+        userInfo.role = 2;
+      }
+      console.log(userInfo.role);
     };
 
     //
@@ -391,6 +393,7 @@ export default defineComponent({
       columns,
       handleTableChange,
       deleteUser,
+      checked,
       userLoading,
       addUserVisible,
       showModal,
