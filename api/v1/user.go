@@ -50,7 +50,18 @@ func DeleteUserController(ctx *gin.Context) {
 	})
 }
 
-// TODO 查询单个用户
+// GetUserController 查询单个用户
+func GetUserController(ctx *gin.Context) {
+	id, _ := strconv.Atoi(ctx.Param("id"))
+	data, code := model.GetUser(id)
+
+	ctx.JSON(http.StatusOK, gin.H{
+		"status": code,
+		"data":   data,
+		"total":  1,
+		"msg":    errormsg.GetErrorMsg(errormsg.SUCCESS),
+	})
+}
 
 // GetUserListController 查询用户列表
 func GetUserListController(ctx *gin.Context) {
@@ -75,7 +86,7 @@ func EditUserController(ctx *gin.Context) {
 	_ = ctx.ShouldBindJSON(&data)
 
 	// 修改用户名时候，检查更新后的用户名是否存在
-	code = model.IsUserExist(data.Username)
+	code = model.UpdateUser(id, data.Username)
 
 	if code == errormsg.SUCCESS {
 		model.EditUser(id, &data)

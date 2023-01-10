@@ -15,7 +15,7 @@ type User struct {
 	Username string `gorm:"type:varchar(20);not null" json:"username" validate:"required,min=4,max=15" label:"用户名"`
 	Password string `gorm:"type:varchar(20);not null" json:"password" validate:"required,min=6,max=20" label:"密码"`
 	// 0无权限，1为管理员
-	Role int `gorm:"type:int;default:2" json:"role" validate:"required,gte=2" label:"角色码"`
+	Role int `gorm:"type:int;default:2" json:"role" validate:"required,lte=2" label:"角色码"`
 }
 
 // =============
@@ -55,6 +55,17 @@ func DeleteUser(id int) int {
 	return errormsg.SUCCESS
 }
 
+// GetUser 查询单个用户
+func GetUser(id int) (User, int) {
+	var user User
+
+	err := db.Where("id = ? ", id).Find(&user).Error
+	if err != nil {
+		return user, errormsg.ERROR
+	}
+	return user, errormsg.SUCCESS
+}
+
 // GetUserList 查询用户列表
 func GetUserList(username string, pageSize int, pageNum int) ([]User, int64) {
 	var userList []User
@@ -86,6 +97,22 @@ func GetUserList(username string, pageSize int, pageNum int) ([]User, int64) {
 		return userList, total
 	}
 
+}
+
+// UpdateUser 编辑用户信息时，防止不能修改用户名
+func UpdateUser(id int, username string) int {
+	var user User
+	db.Select("id, username").Where("username = ? ", username).Find(&user)
+
+	if user.ID == uint(id) {
+		return errormsg.SUCCESS
+	}
+
+	if user.ID > 0 {
+		return errormsg.ERROR_USERNAME_USED
+	}
+
+	return errormsg.SUCCESS
 }
 
 // EditUser 编辑用户信息
