@@ -1,5 +1,5 @@
 import { createApp } from "vue"
-import { Button, Input, Form, message, Layout, Menu, Card, Table, Row, Col, Modal } from "ant-design-vue"
+import { Button, Input, Form, message, Layout, Menu, Card, Table, Row, Col, Modal, Select } from "ant-design-vue"
 import "ant-design-vue/es/message/style/css";
 import "ant-design-vue/es/modal/style/css";
 import AppVue from "@/App.vue"
@@ -21,3 +21,4 @@ createApp(AppVue)
     .use(Row)
     .use(Col)
     .use(Modal)
+    .use(Select)
