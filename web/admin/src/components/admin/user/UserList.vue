@@ -26,25 +26,30 @@
           <span>{{ text == 1 ? "管理员" : "订阅者" }}</span>
         </template>
         <template v-if="column.key === 'action'">
-          <a-button type="primary" style="margin-right: 15px">编辑</a-button>
+          <a-button
+            type="primary"
+            style="margin-right: 15px"
+            @click="editUser(record.ID)"
+            >编辑</a-button
+          >
           <a-button type="danger" @click="deleteUser(record.ID)">删除</a-button>
         </template>
       </template>
     </a-table>
     <!-- 新增用户 -->
     <a-modal
-      v-model:visible="visible"
+      v-model:visible="addUserVisible"
       title="新增用户"
-      @ok="handleOk"
+      @ok="handleAddOk"
       :destrovOnClose="true"
     >
       <template #footer>
-        <a-button key="back" @click="handleCancel">取消</a-button>
+        <a-button key="back" @click="handleAddCancel">取消</a-button>
         <a-button
           key="submit"
           type="primary"
           :loading="userLoading"
-          @click="handleOk"
+          @click="handleAddOk"
           >提交</a-button
         >
       </template>
@@ -70,6 +75,43 @@
           <a-input-password
             v-model:value="userInfo.confirmPassword"
           ></a-input-password>
+        </a-form-item>
+        <a-form-item label="是否为管理员" name="role">
+          <a-select
+            defaultValue="2"
+            @change="adminChange"
+            v-model:value="userInfo.role"
+          >
+            <a-select-option key="1" value="1">是</a-select-option>
+            <a-select-option key="2" value="2">否</a-select-option>
+          </a-select>
+        </a-form-item>
+      </a-form>
+    </a-modal>
+    <!-- 编辑用户 -->
+    <a-modal
+      v-model:visible="editUserVisible"
+      title="编辑用户"
+      @ok="handleEditOk"
+    >
+      <template #footer>
+        <a-button key="back" @click="handleEditCancel">取消</a-button>
+        <a-button
+          key="submit"
+          type="primary"
+          :loading="userLoading"
+          @click="handleEditOk"
+          >提交</a-button
+        >
+      </template>
+      <a-form
+        :model="userInfo"
+        :rules="rules"
+        ref="editUserRef"
+        v-model:value="userInfo"
+      >
+        <a-form-item label="用户名&nbsp;" name="username" has-feedback>
+          <a-input v-model:value="userInfo.username"></a-input>
         </a-form-item>
         <a-form-item label="是否为管理员" name="role">
           <a-select
@@ -223,13 +265,16 @@ export default defineComponent({
       });
     };
 
+    //
     // 新增用户
+    //
     const addUserRef = ref();
     const userInfo = reactive({
       username: "",
       password: "",
       confirmPassword: "",
       role: 2,
+      id: 1,
     });
     let validatePass = async (_rule: Rule, value: string) => {
       if (value === "") {
@@ -263,13 +308,13 @@ export default defineComponent({
     };
 
     const userLoading = ref<boolean>(false);
-    const visible = ref<boolean>(false);
+    const addUserVisible = ref<boolean>(false);
 
     const showModal = () => {
-      visible.value = true;
+      addUserVisible.value = true;
     };
     // 提交
-    const handleOk = async (values: any) => {
+    const handleAddOk = async (values: any) => {
       values = await axios.post("/user/add", {
         username: userInfo.username,
         password: userInfo.password,
@@ -283,18 +328,57 @@ export default defineComponent({
       if (statusCode != 200) {
         return message.error(msg);
       } else {
-        visible.value = false;
+        addUserVisible.value = false;
         return message.success(msg);
       }
     };
     // 取消
-    const handleCancel = () => {
+    const handleAddCancel = () => {
       addUserRef.value.resetFields();
-      visible.value = false;
+      addUserVisible.value = false;
     };
 
     const adminChange = (value: number) => {
       userInfo.role = Number(value);
+    };
+
+    //
+    // 编辑用户
+    //
+    const editUserRef = ref();
+    const editUserVisible = ref<boolean>(false);
+
+    // 点击编辑按钮
+    const editUser = async (id: number) => {
+      editUserVisible.value = true;
+      const res = await axios.get(`user/${id}`);
+      console.log(res.data);
+      userInfo.id = id;
+      userInfo.username = res.data.data["username"];
+      userInfo.role = res.data.data["role"];
+    };
+    // 确定
+    const handleEditOk = async () => {
+      let values = await axios.put(`/user/${userInfo.id}`, {
+        username: userInfo.username,
+        role: userInfo.role,
+      });
+      console.log(values);
+
+      let statusCode: number = values.data.status;
+      let msg: string = values.data.msg;
+
+      if (statusCode != 200) {
+        return message.error(msg);
+      } else {
+        editUserVisible.value = false;
+        return message.success(msg);
+      }
+    };
+    // 取消
+    const handleEditCancel = () => {
+      editUserVisible.value = false;
+      message.info("编辑该用户已取消");
     };
 
     return {
@@ -308,14 +392,18 @@ export default defineComponent({
       handleTableChange,
       deleteUser,
       userLoading,
-      visible,
+      addUserVisible,
       showModal,
-      handleOk,
-      handleCancel,
+      handleAddOk,
+      handleAddCancel,
       userInfo,
       rules,
       adminChange,
       addUserRef,
+      editUserVisible,
+      editUser,
+      handleEditOk,
+      handleEditCancel,
     };
   },
 });
