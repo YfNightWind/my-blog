@@ -23,6 +23,7 @@ func InitRouter() {
 		public.GET("users", v1.GetUserListController)                       // 获取用户列表
 		public.GET("user/:id", v1.GetUserController)                        // 查询单个用户
 		public.GET("category", v1.GetCategoryListController)                // 获取分类列表
+		public.GET("category/:id", v1.GetCategoryController)                // 查询单个分类
 		public.GET("article", v1.GetArticleListController)                  // 获取文章列表
 		public.GET("article/list/:id", v1.GetCategoryArticleListController) // 获取分类下的所有文章
 		public.GET("article/info/:id", v1.GetArticleInfoController)         // 获取单个文章信息

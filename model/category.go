@@ -35,6 +35,18 @@ func CreateCategory(data *Category) int {
 	return errormsg.SUCCESS // 200
 }
 
+// GetCategory 查询单个分类
+func GetCategory(id int) (Category, int) {
+	var category Category
+	err := db.Where("id = ? ", id).Find(&category).Error
+
+	if err != nil {
+		return category, errormsg.ERROR_CATEGORY_NOT_EXIST
+	}
+
+	return category, errormsg.SUCCESS
+}
+
 // GetCategoryList 查询分类列表
 func GetCategoryList(pageSize int, pageNum int) ([]Category, int64) {
 	var categoryList []Category

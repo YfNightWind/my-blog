@@ -51,6 +51,19 @@ func GetCategoryListController(ctx *gin.Context) {
 	})
 }
 
+// GetCategoryController 获取单个分类
+func GetCategoryController(ctx *gin.Context) {
+	id, _ := strconv.Atoi(ctx.Param("id"))
+
+	data, code := model.GetCategory(id)
+
+	ctx.JSON(http.StatusOK, gin.H{
+		"status": code,
+		"data":   data,
+		"msg":    errormsg.GetErrorMsg(code),
+	})
+}
+
 // EditCategoryController 编辑分类
 func EditCategoryController(ctx *gin.Context) {
 	var data model.Category
