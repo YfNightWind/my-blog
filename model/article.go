@@ -10,7 +10,7 @@ type Article struct {
 	Category    Category `gorm:"foreignKey:Cid"` // Cid CategoryId和分类的id对应
 	Title       string   `gorm:"type:varchar(100);not null" json:"title"`
 	Cid         int      `gorm:"type:int;not null" json:"cid"`
-	Description string   `gorm:"type:varchar(200)" json:"desc"`
+	Description string   `gorm:"type:varchar(200)" json:"description"`
 	Content     string   `gorm:"type:longtext" json:"content"`
 	Img         string   `gorm:"type:varchar(100)" json:"img"`
 }
@@ -71,7 +71,7 @@ func CreateArticle(data *Article) int {
 }
 
 // GetArticleList 查询文章列表
-func GetArticleList(pageSize int, pageNum int) ([]Article, int, int64) {
+func GetArticleList(title string, pageSize int, pageNum int) ([]Article, int, int64) {
 	var articleList []Article
 	var total int64
 	// 分页
@@ -81,12 +81,25 @@ func GetArticleList(pageSize int, pageNum int) ([]Article, int, int64) {
 		offSet = -1
 	}
 
-	err = db.Preload("Category").Limit(pageSize).Offset(offSet).Find(&articleList).Count(&total).Error
+	if title == "" {
+		err = db.Preload("Category").Limit(pageSize).Offset(offSet).Find(&articleList).Count(&total).Error
 
-	if err != nil && err != gorm.ErrRecordNotFound {
-		return nil, errormsg.ERROR, 0
+		if err != nil && err != gorm.ErrRecordNotFound {
+			return nil, errormsg.ERROR, 0
+		}
+
+		return articleList, errormsg.SUCCESS, total
+	} else {
+		// 模糊查询
+		err = db.Preload("Category").Where("title LIKE ? ", title+"%").Limit(pageSize).Offset(offSet).Find(&articleList).Count(&total).Error
+
+		if err != nil && err != gorm.ErrRecordNotFound {
+			return nil, errormsg.ERROR, 0
+		}
+
+		return articleList, errormsg.SUCCESS, total
 	}
-	return articleList, errormsg.SUCCESS, total
+
 }
 
 // EditArticle 编辑文章信息

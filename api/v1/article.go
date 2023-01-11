@@ -36,10 +36,11 @@ func DeleteArticleController(ctx *gin.Context) {
 
 // GetArticleListController 查询文章列表
 func GetArticleListController(ctx *gin.Context) {
+	title := ctx.Query("title")
 	pageSize, _ := strconv.Atoi(ctx.Query("pagesize"))
 	pageNum, _ := strconv.Atoi(ctx.Query("pagenum"))
 
-	data, code, total := model.GetArticleList(pageSize, pageNum)
+	data, code, total := model.GetArticleList(title, pageSize, pageNum)
 	ctx.JSON(http.StatusOK, gin.H{
 		"status": code,
 		"data":   data,
