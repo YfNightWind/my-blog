@@ -20,16 +20,20 @@ func InitRouter() {
 	// 公共部分
 	public := r.Group("api/v1")
 	{
-		public.GET("users", v1.GetUserListController)                       // 获取用户列表
-		public.GET("user/:id", v1.GetUserController)                        // 查询单个用户
-		public.GET("category", v1.GetCategoryListController)                // 获取分类列表
-		public.GET("category/:id", v1.GetCategoryController)                // 查询单个分类
-		public.GET("article", v1.GetArticleListController)                  // 获取文章列表
-		public.GET("article/list/:id", v1.GetCategoryArticleListController) // 获取分类下的所有文章
-		public.GET("article/info/:id", v1.GetArticleInfoController)         // 获取单个文章信息
-		public.POST("user/add", v1.AddUserController)                       // 用户注册
-		public.POST("login", v1.LoginController)                            // 用户登录
+		// 用户模块的路由接口
+		public.GET("users", v1.GetUserListController) // 获取用户列表
+		public.GET("user/:id", v1.GetUserController)  // 查询单个用户
+		public.POST("user/add", v1.AddUserController) // 用户注册
+		public.POST("login", v1.LoginController)      // 用户登录
 
+		// 分类模块的路由接口
+		public.GET("category", v1.GetCategoryListController) // 获取分类列表
+		public.GET("category/:id", v1.GetCategoryController) // 查询单个分类
+
+		// 文章模块的路由接口
+		public.GET("article", v1.GetArticleListController)                  // 获取文章列表
+		public.GET("article/info/:id", v1.GetArticleInfoController)         // 获取单个文章信息
+		public.GET("article/list/:id", v1.GetCategoryArticleListController) // 获取分类下的所有文章
 	}
 
 	// 需要使用token中间件的
@@ -37,8 +41,9 @@ func InitRouter() {
 	authorized.Use(middleware.JwtToken())
 	{
 		// 用户模块的路由接口
-		authorized.PUT("user/:id", v1.EditUserController)      // 编辑用户
-		authorized.DELETE("user/:id", v1.DeleteUserController) // 删除用户
+		authorized.PUT("user/:id", v1.EditUserController)                      // 编辑用户
+		authorized.DELETE("user/:id", v1.DeleteUserController)                 // 删除用户
+		authorized.PUT("user/changePassword/:id", v1.ChangePasswordController) // 修改密码
 
 		// 分类模块的路由接口
 		authorized.POST("category/add", v1.CreateCategoryController)   // 添加分类
