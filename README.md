@@ -3,7 +3,7 @@
 目录结构
 ---
 
-```json
+```
 ├── LICENSE // MIT协议
 ├── README.md
 ├── api
