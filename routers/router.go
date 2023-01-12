@@ -6,6 +6,7 @@ import (
 	v1 "my-blog/api/v1"
 	"my-blog/middleware"
 	"my-blog/utils"
+	"net/http"
 )
 
 func InitRouter() {
@@ -16,6 +17,14 @@ func InitRouter() {
 	r.Use(gin.Recovery())
 	r.Use(middleware.Log())  // 使用自定义日志中间件
 	r.Use(middleware.Cors()) // 跨域中间件
+
+	// 后台管理页面资源
+	r.LoadHTMLGlob("static/admin/index.html")
+	r.Static("admin/static", "static/admin/static")
+
+	r.GET("admin", func(context *gin.Context) {
+		context.HTML(http.StatusOK, "index.html", nil)
+	})
 
 	// 公共部分
 	public := r.Group("api/v1")
