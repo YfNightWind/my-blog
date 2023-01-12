@@ -79,7 +79,9 @@ func GetUserList(username string, pageSize int, pageNum int) ([]User, int64) {
 
 	// 查询所有用户
 	if username == "" {
-		err = db.Limit(pageSize).Offset(offSet).Find(&userList).Count(&total).Error
+		//err = db.Limit(pageSize).Offset(offSet).Find(&userList).Count(&total).Error
+		err := db.Select("id, username, role, created_at").Limit(pageSize).Offset(offSet).Find(&userList).Error
+		db.Model(&userList).Count(&total)
 
 		if err != nil && err != gorm.ErrRecordNotFound {
 			return nil, 0
@@ -88,12 +90,15 @@ func GetUserList(username string, pageSize int, pageNum int) ([]User, int64) {
 		return userList, total
 	} else {
 		// 模糊查询
-		err = db.Where("username LIKE ?", username+"%").Limit(pageSize).Offset(offSet).Find(&userList).Count(&total).Error
+		//err = db.Where("username LIKE ?", username+"%").Limit(pageSize).Offset(offSet).Find(&userList).Count(&total).Error
+		//
+
+		err := db.Select("id, username, role, created_at ").Where("username LIKE ?", username+"%").Limit(pageSize).Offset(offSet).Find(&userList).Error
+		db.Model(&userList).Where("username LIKE ?", username+"%").Count(&total)
 
 		if err != nil && err != gorm.ErrRecordNotFound {
 			return nil, 0
 		}
-
 		return userList, total
 	}
 
@@ -142,6 +147,18 @@ func ScryptPassword(password string) string {
 	FinalPassword := base64.StdEncoding.EncodeToString(key)
 
 	return FinalPassword
+}
+
+// ChangePassword 修改密码
+func ChangePassword(id int, data *User) int {
+
+	err := db.Select("password").Where("id = ? ", id).Updates(&data).Error
+
+	if err != nil {
+		return errormsg.ERROR
+	}
+
+	return errormsg.SUCCESS
 }
 
 // VerifyLogin 登录验证

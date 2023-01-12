@@ -101,3 +101,18 @@ func EditUserController(ctx *gin.Context) {
 		"msg":    errormsg.GetErrorMsg(code),
 	})
 }
+
+// ChangePasswordController 修改密码
+func ChangePasswordController(ctx *gin.Context) {
+	var data model.User
+	id, _ := strconv.Atoi(ctx.Param("id"))
+	_ = ctx.ShouldBindJSON(&data)
+
+	code = model.ChangePassword(id, &data)
+
+	ctx.JSON(http.StatusOK, gin.H{
+		"status": code,
+		"msg":    errormsg.GetErrorMsg(code),
+	})
+
+}
