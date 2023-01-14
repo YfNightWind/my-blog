@@ -82,7 +82,8 @@ func GetArticleList(title string, pageSize int, pageNum int) ([]Article, int, in
 	}
 
 	if title == "" {
-		err = db.Order("updated_at DESC").Preload("Category").Limit(pageSize).Offset(offSet).Find(&articleList).Count(&total).Error
+		err := db.Order("updated_at DESC").Preload("Category").Limit(pageSize).Offset(offSet).Find(&articleList).Error
+		db.Model(&articleList).Count(&total)
 
 		if err != nil && err != gorm.ErrRecordNotFound {
 			return nil, errormsg.ERROR, 0
@@ -91,7 +92,8 @@ func GetArticleList(title string, pageSize int, pageNum int) ([]Article, int, in
 		return articleList, errormsg.SUCCESS, total
 	} else {
 		// 模糊查询
-		err = db.Order("updated_at DESC").Preload("Category").Where("title LIKE ? ", title+"%").Limit(pageSize).Offset(offSet).Find(&articleList).Count(&total).Error
+		err := db.Order("updated_at DESC").Preload("Category").Where("title LIKE ? ", title+"%").Limit(pageSize).Offset(offSet).Find(&articleList).Error
+		db.Model(&articleList).Count(&total)
 
 		if err != nil && err != gorm.ErrRecordNotFound {
 			return nil, errormsg.ERROR, 0
