@@ -31,7 +31,7 @@ func InitDb() {
 	}
 
 	// 自动迁移
-	err = db.AutoMigrate(&User{}, &Category{}, &Article{})
+	err = db.AutoMigrate(&User{}, &Category{}, &Article{}, &Profile{})
 	if err != nil {
 		panic("自动迁移出错")
 	}
