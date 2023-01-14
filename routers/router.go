@@ -2,6 +2,7 @@ package routers
 
 import (
 	"fmt"
+	"github.com/gin-contrib/multitemplate"
 	"github.com/gin-gonic/gin"
 	v1 "my-blog/api/v1"
 	"my-blog/middleware"
@@ -9,21 +10,34 @@ import (
 	"net/http"
 )
 
+// 渲染多个HTML模板
+func createMyRender() multitemplate.Renderer {
+	p := multitemplate.NewRenderer()
+	p.AddFromFiles("front", "static/front/index.html")
+	p.AddFromFiles("admin", "static/admin/index.html")
+	return p
+}
+
 func InitRouter() {
 	gin.SetMode(utils.AppMode)
 
 	// 路由初始化
 	r := gin.New()
 	r.Use(gin.Recovery())
-	r.Use(middleware.Log())  // 使用自定义日志中间件
-	r.Use(middleware.Cors()) // 跨域中间件
+	r.Use(middleware.Log())         // 使用自定义日志中间件
+	r.Use(middleware.Cors())        // 跨域中间件
+	r.HTMLRender = createMyRender() // 渲染HTML
 
-	// 后台管理页面资源
-	r.LoadHTMLGlob("static/admin/index.html")
+	r.Static("front/static", "static/front/static")
 	r.Static("admin/static", "static/admin/static")
+	r.StaticFile("/favicon.ico", "/static/front/favicon.ico")
 
-	r.GET("admin", func(context *gin.Context) {
-		context.HTML(http.StatusOK, "index.html", nil)
+	r.GET("/", func(c *gin.Context) {
+		c.HTML(http.StatusOK, "front", nil)
+	})
+
+	r.GET("/admin", func(c *gin.Context) {
+		c.HTML(http.StatusOK, "admin", nil)
 	})
 
 	// 公共部分
@@ -43,6 +57,9 @@ func InitRouter() {
 		public.GET("article", v1.GetArticleListController)                  // 获取文章列表
 		public.GET("article/info/:id", v1.GetArticleInfoController)         // 获取单个文章信息
 		public.GET("article/list/:id", v1.GetCategoryArticleListController) // 获取分类下的所有文章
+
+		// 个人信息
+		public.GET("profile/:id", v1.GetProfileController) // 获取个人信息
 	}
 
 	// 需要使用token中间件的
@@ -66,6 +83,9 @@ func InitRouter() {
 
 		// 上传
 		authorized.POST("upload", v1.UploadController) // 上传文件
+
+		// 个人信息
+		authorized.PUT("profile/:id", v1.UpdateProfileController) // 更新个人信息
 	}
 
 	err := r.Run(utils.HttpPort)
