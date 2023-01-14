@@ -1,0 +1,2 @@
+"use strict";(self["webpackChunkadmin"]=self["webpackChunkadmin"]||[]).push([[726],{52242:function(e,n,t){t.r(n),t.d(n,{default:function(){return s}});var r=function(){var e=this,n=e.$createElement;e._self._c;return e._m(0)},u=[function(){var e=this,n=e.$createElement,t=e._self._c||n;return t("div",[t("h3",[e._v("后台管理页面")])])}],l={data(){return{text:""}}},a=l,c=t(1001),i=(0,c.Z)(a,r,u,!1,null,null,null),s=i.exports}}]);
+//# sourceMappingURL=Index.91b67bbd.js.map
