@@ -55,7 +55,7 @@ Golang, Gin框架, Gorm
 
 ## 运行之前要做的
 
-改`salt`值，改`config.ini`，改`setting.go`里面的内容(如果你没有配置`config.ini`的话就会以我的默认值来运行)。
+**‼️‼️改`salt`值，改`config.ini`，改`setting.go`里面的内容**(如果你没有配置`config.ini`的话就会以我的默认值来运行)。
 
 也许你想访问一下后台管理页面，但是对于管理员没有开放注册，所以你可以先使用接口测试工具，在`user/add`接口下注册一个管理员账户，如下
 一定记住`role`为`1`
@@ -106,11 +106,12 @@ Golang, Gin框架, Gorm
 
 5. 推荐使用`GoLand`运行。或者你可以使用`go run main.go`来执行
 
-6. 不出意外你可以在`localhost:3000`下看到前台展示页面， `localhost:3000/admin`下看到后台页面，你也可以根据接口写出你自己的页面
+6. 不出意外你可以在`localhost:3000`下看到前台展示页面，`localhost:3000/admin`下看到后台页面，你也可以根据接口写出你自己的页面
 
 ### Docker方式
 
 1. 先讲项目`clone`到本地，并且`cd`到项目目录下(也就是有Dokcerfile的目录)
+1. 如`普通方法`第3步，先配置好`config.ini`
 2. 执行`docker build -t my-blog .`
 3. 第2步完成之后，执行`docker run -d -p 3000:3000 --name my-blog my-blog`
 
