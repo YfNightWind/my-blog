@@ -110,7 +110,7 @@ Golang, Gin框架, Gorm
 
 ### Docker方式
 
-1. 先讲项目`clone`到本地，并且`cd`到项目目录下(也就是有Dokcerfile的目录)
+1. 先将项目`clone`到本地，并且`cd`到项目目录下(也就是有Dokcerfile的目录)
 1. 如`普通方法`第3步，先配置好`config.ini`
 2. 执行`docker build -t my-blog .`
 3. 第2步完成之后，执行`docker run -d -p 3000:3000 --name my-blog my-blog`
