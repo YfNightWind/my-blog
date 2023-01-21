@@ -82,7 +82,7 @@ func GetArticleList(title string, pageSize int, pageNum int) ([]Article, int, in
 	}
 
 	if title == "" {
-		err := db.Preload("Category").Limit(pageSize).Offset(offSet).Find(&articleList).Error
+		err := db.Order("created_at DESC").Preload("Category").Limit(pageSize).Offset(offSet).Find(&articleList).Error
 		db.Model(&articleList).Count(&total)
 
 		if err != nil && err != gorm.ErrRecordNotFound {
