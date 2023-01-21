@@ -27,9 +27,8 @@ func UploadFile(file multipart.File, fileSize int64) (string, int) {
 
 	cfg := storage.Config{
 		Zone:          &storage.ZoneHuadong, // 使用华东地区机房
-		UseHTTPS:      false,                // 不使用https(穷)
-		UseCdnDomains: false,                // 不使用cdn加速域名(穷)
-
+		UseHTTPS:      true,
+		UseCdnDomains: true,
 	}
 	// 构建表单上传的对象
 	formUploader := storage.NewFormUploader(&cfg)
