@@ -6,6 +6,8 @@ ENV GOPROXY=https://goproxy.cn,https://goproxy.io,direct \
     GO111MODULE=on \
     CGO_ENABLED=1
 
+ENV TIME_ZONE Asia/Shanghai
+
 WORKDIR /my-blog
 COPY . /my-blog
 
