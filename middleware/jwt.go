@@ -60,8 +60,16 @@ func JwtToken() gin.HandlerFunc {
 		var code int
 		tokenHeader := ctx.GetHeader("Authorization")
 
+		// 正常的应该长这样子
+		// Bearer xxx.xxx.xxx
 		//
-		// FIXME 以下代码有待优化⬇️
+		// 分割之后，长度为2
+		// [Bearer xxx.xxx.xxx]
+		//
+		// 以此来判断token是否有效
+
+		//
+		// TODO 增加Token过期后生成新的Token
 		//
 
 		if tokenHeader == "" {

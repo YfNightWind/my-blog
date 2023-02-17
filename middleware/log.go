@@ -12,6 +12,7 @@ import (
 )
 
 func Log() gin.HandlerFunc {
+	// TODO 加入SQL语句展示
 	log := logrus.New()
 	filePath := "log/"
 	linkName := "latest-log.log"
@@ -42,10 +43,11 @@ func Log() gin.HandlerFunc {
 		logrus.TraceLevel: logWriter,
 	}
 
-	hook := lfshook.NewHook(writeMap, &logrus.TextFormatter{
+	// 日志输出前，执行钩子的内容(输出时间)
+	timeFormat := lfshook.NewHook(writeMap, &logrus.TextFormatter{
 		TimestampFormat: "2006-01-02 15:04:05", // 对时间格式化
 	})
-	log.AddHook(hook)
+	log.AddHook(timeFormat)
 
 	return func(ctx *gin.Context) {
 		startTime := time.Now()
