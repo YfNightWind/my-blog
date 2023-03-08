@@ -135,20 +135,6 @@ func EditUser(id int, data *User) int {
 	return errormsg.SUCCESS
 }
 
-// ScryptPassword 密码加密
-func ScryptPassword(password string) string {
-	const keyLen = 10
-
-	key, err := scrypt.Key([]byte(password), utils.Salt, 16384, 8, 1, keyLen)
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	FinalPassword := base64.StdEncoding.EncodeToString(key)
-
-	return FinalPassword
-}
-
 // ChangePassword 修改密码
 func ChangePassword(id int, data *User) int {
 
@@ -161,8 +147,8 @@ func ChangePassword(id int, data *User) int {
 	return errormsg.SUCCESS
 }
 
-// VerifyLogin 登录验证
-func VerifyLogin(username string, password string) int {
+// VerifyAdminLogin 后台登录验证
+func VerifyAdminLogin(username, password string) int {
 	var user User
 
 	db.Where("username = ?", username).Find(&user)
@@ -183,6 +169,39 @@ func VerifyLogin(username string, password string) int {
 	}
 
 	return errormsg.SUCCESS
+}
+
+// VerifyFrontLogin 前台登录验证
+func VerifyFrontLogin(username, password string) (User, int) {
+	var user User
+
+	db.Where("username = ? ", username).Find(&user)
+
+	// 用户名错误或不存在
+	if user.ID == 0 {
+		return user, errormsg.ERROR_USER_NOT_EXIST
+	}
+
+	//密码错误
+	if ScryptPassword(password) != user.Password {
+		return user, errormsg.ERROR_PASSWORD_WRONG
+	}
+
+	return user, errormsg.SUCCESS
+}
+
+// ScryptPassword 密码加密
+func ScryptPassword(password string) string {
+	const keyLen = 10
+
+	key, err := scrypt.Key([]byte(password), utils.Salt, 16384, 8, 1, keyLen)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	FinalPassword := base64.StdEncoding.EncodeToString(key)
+
+	return FinalPassword
 }
 
 // BeforeSave 开始事务前，由GORM处理

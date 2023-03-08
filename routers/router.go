@@ -44,10 +44,11 @@ func InitRouter() {
 	public := r.Group("api/v1")
 	{
 		// 用户模块的路由接口
-		public.GET("users", v1.GetUserListController) // 获取用户列表
-		public.GET("user/:id", v1.GetUserController)  // 查询单个用户
-		public.POST("user/add", v1.AddUserController) // 用户注册
-		public.POST("login", v1.LoginController)      // 用户登录
+		public.GET("users", v1.GetUserListController)       // 获取用户列表
+		public.GET("user/:id", v1.GetUserController)        // 查询单个用户
+		public.POST("user/add", v1.AddUserController)       // 用户注册
+		public.POST("login", v1.AdminLoginController)       // 后台登录
+		public.POST("front/login", v1.FrontLoginController) // 前台登录
 
 		// 分类模块的路由接口
 		public.GET("category", v1.GetCategoryListController) // 获取分类列表
