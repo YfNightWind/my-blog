@@ -1,4 +1,6 @@
 # 个人博客
+目前博客可以进行ChatGPT的聊天，需要自己的ApiKey，各位可以自行使用。  
+前端页面还在编写中...
 
 目录结构
 ---
@@ -8,13 +10,6 @@
 ├── LICENSE 
 ├── README.md
 ├── api // 控制层
-│   └── v1
-│       ├── article.go
-│       ├── category.go
-│       ├── login.go
-│       ├── profile.go
-│       ├── upload.go
-│       └── user.go
 ├── config
 │   └── config.ini // 在这里配置一些网站的参数
 ├── go.mod
@@ -25,11 +20,6 @@
 │   ├── jwt.go // jwt认证
 │   └── log.go // 日志处理
 ├── model // 数据库模型
-│   ├── article.go
-│   ├── category.go
-│   ├── db.go
-│   ├── profile.go
-│   └── user.go
 ├── routers
 │   └── router.go // 路由
 ├── server
@@ -100,6 +90,9 @@ Golang, Gin框架, Gorm
    SecretKey = 己
    Bucket = 填
    QiNiuServer = 写
+   
+   [ChatGPT]
+   ApiKey = 您的ChatGPT ApiKey
    ```
 
 4. 你需要配置好你的数据库信息，因为使用了Gorm提供的迁移功能，它会自动生成对应的表。
@@ -122,4 +115,4 @@ Golang, Gin框架, Gorm
 - [ ] 验证使用中间件来实现
 - [ ] 接口文档
 - [ ] 评论功能
-- [ ] 展示页面登录功能
+- [x] 展示页面登录功能
