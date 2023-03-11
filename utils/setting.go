@@ -20,6 +20,8 @@ var (
 	SecretKey   string
 	Bucket      string
 	QiNiuServer string
+
+	ApiKey string
 )
 
 // 初始化
@@ -34,6 +36,7 @@ func init() {
 	LoadServer(file)
 	LoadData(file)
 	LoadQiNiu(file)
+	LoadChatGPT(file)
 }
 
 func LoadServer(file *ini.File) {
@@ -55,4 +58,8 @@ func LoadQiNiu(file *ini.File) {
 	SecretKey = file.Section("qiniu").Key("SecretKey").String()
 	Bucket = file.Section("qiniu").Key("Bucket").String()
 	QiNiuServer = file.Section("qiniu").Key("QiNiuServer").String()
+}
+
+func LoadChatGPT(file *ini.File) {
+	ApiKey = file.Section("ChatGPT").Key("ApiKey").String()
 }

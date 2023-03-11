@@ -61,6 +61,9 @@ func InitRouter() {
 
 		// 个人信息
 		public.GET("profile/:id", v1.GetProfileController) // 获取个人信息
+
+		// ChatGPT
+		public.POST("chat", v1.Chat)
 	}
 
 	// 需要使用token中间件的
