@@ -13,6 +13,7 @@ type Article struct {
 	Description string   `gorm:"type:varchar(200)" json:"description"`
 	Content     string   `gorm:"type:longtext" json:"content"`
 	Img         string   `gorm:"type:varchar(100)" json:"img"`
+	ReadCount   uint     `gorm:"type:int(100)" json:"read_count"`
 }
 
 // =============
@@ -57,6 +58,11 @@ func GetCategoryArticleList(id int, pageSize int, pageNum int) ([]Article, int, 
 func GetArticleInfo(id int) (*Article, int) {
 	var article Article
 	err := db.Preload("Category").Where("id = ?", id).First(&article).Error
+
+	// 每查询一次，阅读次数 + 1
+	db.Model(&article).
+		Where("id = ?", id).
+		UpdateColumn("read_count", gorm.Expr("read_count + ?", 1))
 
 	if err != nil {
 		return nil, errormsg.ERROR_ARTICLE_NOT_EXIST
