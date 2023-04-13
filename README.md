@@ -1,54 +1,54 @@
-# 个人博客
-目前博客可以进行ChatGPT的聊天，需要自己的ApiKey，各位可以自行使用。  
-前端页面还在编写中...
+# The Gin Blog
+English | [简体中文](./README.md)
 
-目录结构
+Project Structure
 ---
 
 ```
 ├── Dockerfile
 ├── LICENSE 
 ├── README.md
-├── api // 控制层
+├── README_EN.md
+├── api
 ├── config
-│   └── config.ini // 在这里配置一些网站的参数
+│   └── config.ini // blog 
 ├── go.mod
 ├── go.sum
-├── main.go // 入口函数
-├── middleware // 中间件
-│   ├── cors.go // 跨域
-│   ├── jwt.go // jwt认证
-│   └── log.go // 日志处理
-├── model // 数据库模型
+├── main.go
+├── middlewar
+│   ├── cors.go
+│   ├── jwt.go 
+│   └── log.go 
+├── model // database module
 ├── routers
-│   └── router.go // 路由
+│   └── router.go
 ├── server
-│   └── upload.go // 七牛云对象存储上传配置
+│   └── upload.go // qiniu Kodo upload config
 ├── static
-│   ├── admin // 后台管理静态页面
-│   └── front // 前台展示静态页面
+│   ├── admin // static admin page
+│   └── front // static front page
 ├── upload
 └── utils
     ├── errormsg
-    │   └── error_message.go // 错误处理模块
-    ├── salt_code.go // 在这里配置加密盐值
-    ├── setting.go // 一些默认值
+    │   └── error_message.go // error message module
+    ├── salt_code.go // configure your salt code
+    ├── setting.go // some default settings
     └── validator
-        └── validator.go // 验证器
+        └── validator.go
 ```
 
 
 
-## 使用的技术
+## Tech Stack
 
-Golang, Gin框架, Gorm
+Golang, Gin Framework, Gorm
 
-## 运行之前要做的
+## Before running
 
-**‼️‼️改`salt`值，改`config.ini`，改`setting.go`里面的内容**(如果你没有配置`config.ini`的话就会以我的默认值来运行)。
+**‼️‼️Edit the `salt` code, `config.ini` and `setting.go`**(If not, `config.ini` will run with default settings)。
 
-也许你想访问一下后台管理页面，但是对于管理员没有开放注册，所以你可以先使用接口测试工具，在`user/add`接口下注册一个管理员账户，如下
-一定记住`role`为`1`
+Maybe you want to visit the admin page, however, the Admin can not be registered by the `user/add`. You can use some tools like `Postman` to register an Admin Account.
+REMEMBER to set the`role`as`1`
 
 ```json
 {
@@ -58,61 +58,52 @@ Golang, Gin框架, Gorm
 }
 ```
 
-## 运行方式
+## Usage
 
-### 普通方法
+### Use in Default
 
-1. 进入该目录
+1. Enter THE directory
 
-2. 安装依赖`go mod tidy`
+2. Run `go mod tidy`
 
-3. 配置`config.ini`
+3. Config `config.ini`
 
    ```ini
-   # 配置博客的一些基本参数
+   # Configure some basic parameters of the blog
    [server]
-   # debug:开发模式 release:生产模式
+   # debug: debug mode, elease: release mode
    AppMode = debug
    HttpPort = :3000
-   JwtKey = 自行定义
+   JwtKey = make your own JwtKey
    
-   # 数据库的一些参数
+   # Parameters of the Database
    [database]
-   DbHost = 你的地址
+   DbHost = Your MySQL address
    DbPort = 3306
-   DbUser = 你的数据库用户名
-   DbPassword = 你的数据库密码
+   DbUser = Your MySQL's username
+   DbPassword = MySQL's password
    DbName = my-blog
    
-   # 七牛云存储
+   # Qiniu kodo
    [qiniu]
-   AccessKey = 自
-   SecretKey = 己
-   Bucket = 填
-   QiNiuServer = 写
+   AccessKey = 
+   SecretKey = 
+   Bucket = 
+   QiNiuServer = 
    
    [ChatGPT]
-   ApiKey = 您的ChatGPT ApiKey
+   ApiKey = Your ChatGPT ApiKey
    ```
 
-4. 你需要配置好你的数据库信息，因为使用了Gorm提供的迁移功能，它会自动生成对应的表。
+4. You need to configure your database parameters well. Because of the Gorm `Auto Migrations`feature, it will automatically generate the table.
 
-5. 推荐使用`GoLand`运行。或者你可以使用`go run main.go`来执行
+5. `GoLand`is recommended. Or you can just run the `go run main.go` command.
 
-6. 不出意外你可以在`localhost:3000`下看到前台展示页面，`localhost:3000/admin`下看到后台页面，你也可以根据接口写出你自己的页面
+6. Visit`localhost:3000`to see the front page. `localhost:3000/admin`to browse the admin page. You can also make your own!
 
-### Docker方式
+### Run in Docker
 
-1. 先将项目`clone`到本地，并且`cd`到项目目录下(也就是有Dokcerfile的目录)
-1. 如`普通方法`第3步，先配置好`config.ini`
-2. 执行`docker build -t my-blog .`
-3. 第2步完成之后，执行`docker run -d -p 3000:3000 --name my-blog my-blog`
-
-## 一些TODO
-
-- [x] 部署docker
-- [x] 前台展示页面
-- [ ] 验证使用中间件来实现
-- [ ] 接口文档
-- [ ] 评论功能
-- [x] 展示页面登录功能
+1. `clone`the project, `cd` to the directory which with the `Dockerfile`
+1. Do the same thing as `Use in Default`step 3, config the `config.ini`
+2. run the command : `docker build -t my-blog .`
+3. And the `docker run -d -p 3000:3000 --name my-blog my-blog`as well.
