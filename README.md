@@ -66,7 +66,7 @@ REMEMBER to set the`role`as`1`
 
 2. Run `go mod tidy`
 
-3. Config `config.ini`
+3. Configure the `config.ini`
 
    ```ini
    # Configure some basic parameters of the blog
@@ -104,6 +104,6 @@ REMEMBER to set the`role`as`1`
 ### Run in Docker
 
 1. `clone`the project, `cd` to the directory which with the `Dockerfile`
-1. Do the same thing as `Use in Default`step 3, config the `config.ini`
+1. Do the same thing as `Use in Default`step 3, configure the `config.ini`
 2. run the command : `docker build -t my-blog .`
 3. And the `docker run -d -p 3000:3000 --name my-blog my-blog`as well.
