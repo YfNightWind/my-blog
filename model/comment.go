@@ -111,3 +111,53 @@ func ArticleGetCommentList(id int, pageSize int, pageNum int) ([]Comment, int64,
 }
 
 // PassTheComment 通过评论
+func PassTheComment(id int, data *Comment) int {
+	var comment Comment
+	var res Comment
+	var article Article
+	var updateMap = make(map[string]interface{})
+
+	// 更新评论状态
+	updateMap["status"] = data.Status
+
+	err = db.Model(&comment).Where("id = ? ", id).
+		Updates(updateMap).
+		Find(&res).Error
+
+	// 更新文章的评论数
+	db.Model(&article).
+		Where("id = ? ", res.ArticleId).
+		UpdateColumn("comment_count", gorm.Expr("comment_count + ?", 1))
+
+	if err != nil {
+		return errormsg.ERROR
+	}
+
+	return errormsg.SUCCESS
+}
+
+// RemoveTheComment  撤下该评论
+func RemoveTheComment(id int, data *Comment) int {
+	var comment Comment
+	var res Comment
+	var article Article
+	var updateMap = make(map[string]interface{})
+
+	// 更新评论状态
+	updateMap["status"] = data.Status
+
+	err = db.Model(&comment).Where("id = ? ", id).
+		Updates(updateMap).
+		Find(&res).Error
+
+	// 更新文章的评论数
+	db.Model(&article).
+		Where("id = ? ", res.ArticleId).
+		UpdateColumn("comment_count", gorm.Expr("comment_count - ?", 1))
+
+	if err != nil {
+		return errormsg.ERROR
+	}
+
+	return errormsg.SUCCESS
+}
