@@ -15,8 +15,8 @@ type Comment struct {
 	Status       int    `json:"status"`
 }
 
-// NewComment 新增评论
-func NewComment(comment *Comment) int {
+// AddComment 新增评论
+func AddComment(comment *Comment) int {
 	err := db.Create(&comment).Error
 	if err != nil {
 		return errormsg.ERROR
@@ -136,7 +136,7 @@ func PassTheComment(id int, data *Comment) int {
 	return errormsg.SUCCESS
 }
 
-// RemoveTheComment  撤下该评论
+// RemoveTheComment 撤下该评论
 func RemoveTheComment(id int, data *Comment) int {
 	var comment Comment
 	var res Comment
