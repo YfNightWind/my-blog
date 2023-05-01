@@ -9,8 +9,6 @@ import (
 	"strconv"
 )
 
-var code int
-
 // AddUserController 添加用户
 func AddUserController(ctx *gin.Context) {
 	var data model.User
