@@ -64,6 +64,11 @@ func InitRouter() {
 
 		// ChatGPT
 		public.POST("chat", v1.Chat)
+
+		// 评论模块路由接口
+		public.GET("comment/info/:id", v1.GetCommentController)               // 获取文章评论
+		public.GET("article/comment/:id", v1.ArticleGetCommentListController) // 获取文章下的评论
+		public.GET("comment/number/:id", v1.GetCommentNumberController)       // 获取文章评论数量
 	}
 
 	// 需要使用token中间件的
@@ -71,9 +76,9 @@ func InitRouter() {
 	authorized.Use(middleware.JwtToken())
 	{
 		// 用户模块的路由接口
-		authorized.PUT("user/:id", v1.EditUserController)                      // 编辑用户
-		authorized.DELETE("user/:id", v1.DeleteUserController)                 // 删除用户
-		authorized.PUT("user/changePassword/:id", v1.ChangePasswordController) // 修改密码
+		authorized.PUT("user/:id", v1.EditUserController)                       // 编辑用户
+		authorized.DELETE("user/:id", v1.DeleteUserController)                  // 删除用户
+		authorized.PUT("user/change/password/:id", v1.ChangePasswordController) // 修改密码
 
 		// 分类模块的路由接口
 		authorized.POST("category/add", v1.CreateCategoryController)   // 添加分类
@@ -90,6 +95,13 @@ func InitRouter() {
 
 		// 个人信息
 		authorized.PUT("profile/:id", v1.UpdateProfileController) // 更新个人信息
+
+		// 评论模块路由接口
+		authorized.POST("add/comment", v1.AddCommentController)             // 新增评论
+		authorized.GET("comment/list", v1.GetCommentListController)         // 后台获取评论列表
+		authorized.DELETE("delete/comment/:id", v1.DeleteCommentController) // 后台删除评论
+		authorized.PUT("pass/comment/:id", v1.PassTheCommentController)     // 后台审核通过评论
+		authorized.PUT("remove/comment/:id", v1.RemoveTheCommentController) // 后台撤下评论
 	}
 
 	err := r.Run(utils.HttpPort)
