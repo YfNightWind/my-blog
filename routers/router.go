@@ -104,6 +104,11 @@ func InitRouter() {
 		authorized.PUT("remove/comment/:id", v1.RemoveTheCommentController) // 后台撤下评论
 	}
 
+	// 404处理
+	r.NoRoute(func(context *gin.Context) {
+		context.String(http.StatusNotFound, "找不到该页面，请检查请求地址。")
+	})
+
 	err := r.Run(utils.HttpPort)
 	if err != nil {
 		fmt.Println(err)
