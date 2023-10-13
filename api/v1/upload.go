@@ -1,9 +1,9 @@
 package v1
 
 import (
+	"github.com/YfNightWind/my-blog/server"
+	"github.com/YfNightWind/my-blog/utils/errormsg"
 	"github.com/gin-gonic/gin"
-	"my-blog/server"
-	"my-blog/utils/errormsg"
 	"net/http"
 )
 

@@ -1,8 +1,8 @@
 package main
 
 import (
-	"my-blog/model"
-	"my-blog/routers"
+	"github.com/YfNightWind/my-blog/model"
+	"github.com/YfNightWind/my-blog/routers"
 )
 
 func main() {

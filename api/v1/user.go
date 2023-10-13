@@ -1,10 +1,10 @@
 package v1
 
 import (
+	"github.com/YfNightWind/my-blog/model"
+	"github.com/YfNightWind/my-blog/utils/errormsg"
+	"github.com/YfNightWind/my-blog/utils/validator"
 	"github.com/gin-gonic/gin"
-	"my-blog/model"
-	"my-blog/utils/errormsg"
-	"my-blog/utils/validator"
 	"net/http"
 	"strconv"
 )

@@ -3,10 +3,10 @@ package v1
 import (
 	"bytes"
 	"encoding/json"
+	"github.com/YfNightWind/my-blog/utils"
+	"github.com/YfNightWind/my-blog/utils/errormsg"
 	"github.com/gin-gonic/gin"
 	"io"
-	"my-blog/utils"
-	"my-blog/utils/errormsg"
 	"net/http"
 )
 

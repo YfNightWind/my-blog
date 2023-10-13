@@ -1,8 +1,9 @@
 package model
 
 import (
+	"github.com/YfNightWind/my-blog/utils/errormsg"
+	"github.com/YfNightWind/my-blog/utils/mylog"
 	"gorm.io/gorm"
-	"my-blog/utils/errormsg"
 )
 
 type Article struct {
@@ -47,7 +48,7 @@ func GetCategoryArticleList(id int, pageSize int, pageNum int) ([]Article, int, 
 		Where("cid = ?", id).
 		Find(&categoryArticle).
 		Count(&total).Error
-
+	mylog.Info("11111111")
 	if err != nil {
 		return nil, errormsg.ERROR_CATEGORY_NOT_EXIST, 0
 	}

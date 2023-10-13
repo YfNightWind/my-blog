@@ -12,9 +12,8 @@ import (
 )
 
 func Log() gin.HandlerFunc {
-	// TODO 加入SQL语句展示
 	log := logrus.New()
-	filePath := "log/"
+	filePath := "log"
 	linkName := "latest-log.log"
 	src, err := os.OpenFile(filePath, os.O_RDWR|os.O_CREATE, 0755)
 	if err != nil {

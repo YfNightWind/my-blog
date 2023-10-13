@@ -2,11 +2,11 @@ package model
 
 import (
 	"encoding/base64"
+	"github.com/YfNightWind/my-blog/utils"
+	"github.com/YfNightWind/my-blog/utils/errormsg"
 	"golang.org/x/crypto/scrypt"
 	"gorm.io/gorm"
 	"log"
-	"my-blog/utils"
-	"my-blog/utils/errormsg"
 )
 
 type User struct {
@@ -27,6 +27,7 @@ func IsUserExist(name string) (code int) {
 	var user User
 	db.Select("id").Where("username = ? ", name).Find(&user) // SELECT * FROM user LIMIT 1;
 	if user.ID > 0 {
+
 		return errormsg.ERROR_USERNAME_USED // 1001
 	}
 
@@ -93,7 +94,8 @@ func GetUserList(username string, pageSize int, pageNum int) ([]User, int64) {
 		//err = db.Where("username LIKE ?", username+"%").Limit(pageSize).Offset(offSet).Find(&userList).Count(&total).Error
 		//
 
-		err := db.Select("id, username, role, created_at ").Where("username LIKE ?", username+"%").Limit(pageSize).Offset(offSet).Find(&userList).Error
+		err := db.Select("id, username, role, created_at ").Where("username LIKE ?", username+"%").
+			Limit(pageSize).Offset(offSet).Find(&userList).Error
 		db.Model(&userList).Where("username LIKE ?", username+"%").Count(&total)
 
 		if err != nil && err != gorm.ErrRecordNotFound {

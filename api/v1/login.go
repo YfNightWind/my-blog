@@ -1,10 +1,10 @@
 package v1
 
 import (
+	"github.com/YfNightWind/my-blog/middleware"
+	"github.com/YfNightWind/my-blog/model"
+	"github.com/YfNightWind/my-blog/utils/errormsg"
 	"github.com/gin-gonic/gin"
-	"my-blog/middleware"
-	"my-blog/model"
-	"my-blog/utils/errormsg"
 	"net/http"
 )
 

@@ -15,3 +15,6 @@
 # vendor/
 .idea/
 .DS_Store
+log
+config/config.ini
+utils/salt_code.go

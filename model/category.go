@@ -1,8 +1,8 @@
 package model
 
 import (
+	"github.com/YfNightWind/my-blog/utils/errormsg"
 	"gorm.io/gorm"
-	"my-blog/utils/errormsg"
 )
 
 type Category struct {

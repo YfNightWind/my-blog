@@ -1,8 +1,8 @@
 package model
 
 import (
+	"github.com/YfNightWind/my-blog/utils/errormsg"
 	"gorm.io/gorm"
-	"my-blog/utils/errormsg"
 )
 
 type Comment struct {
@@ -46,7 +46,6 @@ func GetCommentList(pageSize int, pageNum int) ([]Comment, int64, int) {
 	if pageNum == -1 && pageSize == -1 {
 		offSet = -1
 	}
-
 	err := db.
 		Model(&commentList).
 		Select("comment.id, article.title, user_id, article_id, user.username, comment.content, comment.status, comment.created_at, comment.deleted_at").

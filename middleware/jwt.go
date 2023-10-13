@@ -1,10 +1,10 @@
 package middleware
 
 import (
+	"github.com/YfNightWind/my-blog/utils"
+	"github.com/YfNightWind/my-blog/utils/errormsg"
 	"github.com/gin-gonic/gin"
 	"github.com/golang-jwt/jwt/v4"
-	"my-blog/utils"
-	"my-blog/utils/errormsg"
 	"net/http"
 	"strings"
 	"time"

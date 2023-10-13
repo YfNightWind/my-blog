@@ -2,11 +2,12 @@ package model
 
 import (
 	"fmt"
+	"time"
+
+	"github.com/YfNightWind/my-blog/utils"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 	"gorm.io/gorm/schema"
-	"my-blog/utils"
-	"time"
 )
 
 // InitDb 用于连接配置数据库

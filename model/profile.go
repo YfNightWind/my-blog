@@ -1,6 +1,6 @@
 package model
 
-import "my-blog/utils/errormsg"
+import "github.com/YfNightWind/my-blog/utils/errormsg"
 
 type Profile struct {
 	ID          int    `gorm:"primary_key;auto_increment" json:"id"`
