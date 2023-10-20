@@ -8,6 +8,7 @@ import (
 	"github.com/YfNightWind/my-blog/utils/mylog"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
+	"gorm.io/gorm/logger"
 	"gorm.io/gorm/schema"
 )
 
@@ -26,6 +27,8 @@ func InitDb() {
 		NamingStrategy: schema.NamingStrategy{
 			SingularTable: true, // 使用单数表名，启用该选项，此时，`User` 的表名应该是 `user`
 		},
+		// 打印SQL语句
+		Logger: logger.Default.LogMode(logger.Info),
 	})
 
 	if err != nil {
