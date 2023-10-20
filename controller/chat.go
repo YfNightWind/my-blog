@@ -3,11 +3,12 @@ package v1
 import (
 	"bytes"
 	"encoding/json"
+	"io"
+	"net/http"
+
 	"github.com/YfNightWind/my-blog/utils"
 	"github.com/YfNightWind/my-blog/utils/errormsg"
 	"github.com/gin-gonic/gin"
-	"io"
-	"net/http"
 )
 
 func Chat(ctx *gin.Context) {

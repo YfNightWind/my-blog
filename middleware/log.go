@@ -2,22 +2,29 @@ package middleware
 
 import (
 	"fmt"
+	"os"
+	"time"
+
+	"github.com/YfNightWind/my-blog/utils/mylog"
 	"github.com/gin-gonic/gin"
 	rotateLogs "github.com/lestrrat-go/file-rotatelogs"
 	"github.com/rifflock/lfshook"
 	"github.com/sirupsen/logrus"
-	"math"
-	"os"
-	"time"
 )
+
+const PERMISSION_CODE = 0666
 
 func Log() gin.HandlerFunc {
 	log := logrus.New()
 	filePath := "log"
 	linkName := "latest-log.log"
-	src, err := os.OpenFile(filePath, os.O_RDWR|os.O_CREATE, 0755)
+	_, err := isPathExists(filePath)
 	if err != nil {
-		fmt.Println("err: ", err)
+		os.MkdirAll(filePath, os.ModePerm)
+	}
+	src, err := os.OpenFile(filePath, os.O_RDWR|os.O_CREATE|os.O_APPEND, PERMISSION_CODE)
+	if err != nil {
+		mylog.Error(err)
 	}
 	log.Out = src
 
@@ -54,7 +61,7 @@ func Log() gin.HandlerFunc {
 		stopTime := time.Since(startTime)
 
 		// 请求时间
-		spendTime := fmt.Sprintf("%d ms", int(math.Ceil(float64(stopTime.Nanoseconds()/1000000.0))))
+		spendTime := fmt.Sprintf("%d ms", stopTime.Nanoseconds()/1000000.0)
 
 		// 主机名
 		hostName, err := os.Hostname()
@@ -107,4 +114,16 @@ func Log() gin.HandlerFunc {
 			entry.Info()
 		}
 	}
+}
+
+// isPathExists 检查该路径是否存在
+func isPathExists(path string) (bool, error) {
+	_, err := os.Stat(path)
+	if err == nil {
+		return true, nil
+	}
+	if os.IsNotExist(err) {
+		return false, nil
+	}
+	return false, err
 }

@@ -18,3 +18,4 @@
 log
 config/config.ini
 utils/salt_code.go
+latest-log.log

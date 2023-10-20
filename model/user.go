@@ -2,11 +2,12 @@ package model
 
 import (
 	"encoding/base64"
+	"log"
+
 	"github.com/YfNightWind/my-blog/utils"
 	"github.com/YfNightWind/my-blog/utils/errormsg"
 	"golang.org/x/crypto/scrypt"
 	"gorm.io/gorm"
-	"log"
 )
 
 type User struct {

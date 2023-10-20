@@ -2,12 +2,13 @@ package routers
 
 import (
 	"fmt"
-	v1 "github.com/YfNightWind/my-blog/api/v1"
+	"net/http"
+
+	v1 "github.com/YfNightWind/my-blog/controller"
 	"github.com/YfNightWind/my-blog/middleware"
 	"github.com/YfNightWind/my-blog/utils"
 	"github.com/gin-contrib/multitemplate"
 	"github.com/gin-gonic/gin"
-	"net/http"
 )
 
 // 渲染多个HTML模板

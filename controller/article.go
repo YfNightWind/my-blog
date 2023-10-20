@@ -1,11 +1,12 @@
 package v1
 
 import (
+	"net/http"
+	"strconv"
+
 	"github.com/YfNightWind/my-blog/model"
 	"github.com/YfNightWind/my-blog/utils/errormsg"
 	"github.com/gin-gonic/gin"
-	"net/http"
-	"strconv"
 )
 
 // CreateArticleController 添加文章
@@ -14,7 +15,6 @@ func CreateArticleController(ctx *gin.Context) {
 
 	_ = ctx.ShouldBindJSON(&data)
 	code = model.CreateArticle(&data)
-
 	ctx.JSON(http.StatusOK, gin.H{
 		"status": code,
 		"data":   data,

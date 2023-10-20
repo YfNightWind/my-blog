@@ -5,6 +5,7 @@ import (
 	"time"
 
 	"github.com/YfNightWind/my-blog/utils"
+	"github.com/YfNightWind/my-blog/utils/mylog"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 	"gorm.io/gorm/schema"
@@ -28,13 +29,13 @@ func InitDb() {
 	})
 
 	if err != nil {
-		panic("failed to connect database")
+		mylog.Error("连接数据库出错")
 	}
 
 	// 自动迁移
 	err = db.AutoMigrate(&User{}, &Category{}, &Article{}, &Profile{}, &Comment{})
 	if err != nil {
-		panic("自动迁移出错")
+		mylog.Error("自动迁移出错")
 	}
 
 	// 获取通用数据库对象 sql.DB ，然后使用其提供的功能
