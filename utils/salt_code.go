@@ -1,3 +1,7 @@
 package utils
 
-var Salt = []byte{填, 入, 8, 个, 小于, 256, 的数}
+func readConfig() {
+
+}
+
+//var Salt = []byte{123, 41, 89, 69, 255, 145, 10}

@@ -22,6 +22,8 @@ var (
 	QiNiuServer string
 
 	ApiKey string
+
+	Salt []byte
 )
 
 // 初始化
@@ -37,6 +39,7 @@ func init() {
 	LoadData(file)
 	LoadQiNiu(file)
 	LoadChatGPT(file)
+	//LoadSaltCode(file)
 }
 
 func LoadServer(file *ini.File) {
@@ -63,3 +66,13 @@ func LoadQiNiu(file *ini.File) {
 func LoadChatGPT(file *ini.File) {
 	ApiKey = file.Section("ChatGPT").Key("ApiKey").String()
 }
+
+//func LoadSaltCode(file *ini.File) {
+//	for i := 1; i <= 8; i++ {
+//		file.Section("Salt").Key("saltCode" + string(rune(i)))
+//	}
+//	data, err := file.WriteTo()
+//	if err != nil {
+//		return
+//	}
+//}

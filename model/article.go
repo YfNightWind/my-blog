@@ -2,7 +2,6 @@ package model
 
 import (
 	"github.com/YfNightWind/my-blog/utils/errormsg"
-	"github.com/YfNightWind/my-blog/utils/mylog"
 	"gorm.io/gorm"
 )
 
@@ -25,7 +24,7 @@ type Article struct {
 // IsArticleExist 查询分类是否存在
 func IsArticleExist(name string) (code int) {
 	var article Article
-	db.Select("id").Where("name = ? ", name).Find(&article) // SELECT * FROM article LIMIT 1;
+	db.Select("id").Where("name = ? ", name).Find(&article)
 	if article.ID > 0 {
 		return errormsg.ERROR_CATEGORYNAME_USED // 3001
 	}
@@ -48,7 +47,7 @@ func GetCategoryArticleList(id int, pageSize int, pageNum int) ([]Article, int, 
 		Where("cid = ?", id).
 		Find(&categoryArticle).
 		Count(&total).Error
-	mylog.Info("11111111")
+
 	if err != nil {
 		return nil, errormsg.ERROR_CATEGORY_NOT_EXIST, 0
 	}
@@ -77,10 +76,10 @@ func GetArticleInfo(id int) (*Article, int) {
 func CreateArticle(data *Article) int {
 	err := db.Create(&data).Error
 	if err != nil {
-		return errormsg.ERROR // 500
+		return errormsg.ERROR
 	}
 
-	return errormsg.SUCCESS // 200
+	return errormsg.SUCCESS
 }
 
 // GetArticleList 查询文章列表
