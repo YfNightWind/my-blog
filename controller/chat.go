@@ -1,4 +1,4 @@
-package v1
+package controller
 
 import (
 	"bytes"
@@ -13,7 +13,7 @@ import (
 
 func Chat(ctx *gin.Context) {
 	// 设置 API 访问地址
-	url := "https://api.openai.com/v1/chat/completions"
+	url := "https://api.openai.com/v1/chat/completions" // 检查一下 todo
 
 	question, _ := ctx.GetPostForm("question")
 	message := []interface{}{

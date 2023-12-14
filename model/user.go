@@ -2,6 +2,7 @@ package model
 
 import (
 	"encoding/base64"
+	"errors"
 	"log"
 
 	"github.com/YfNightWind/my-blog/utils"
@@ -17,11 +18,16 @@ type User struct {
 	Password string `gorm:"type:varchar(20);not null" json:"password" validate:"required,min=6,max=20" label:"密码"`
 	// 0无权限，1为管理员
 	Role int `gorm:"type:int;default:2" json:"role" validate:"required,lte=2" label:"角色码"`
+	// 是否有权限查看工具页面 有权限为1，无权限为0
+	IsAccessTools int `gorm:"type:int8;default:0" json:"is_access_tools" validate:"required,lte=2" label:"工具页面权限"`
 }
 
-// =============
-// 对数据库的操作👇
-// =============
+// BeforeSave 开始事务前，由GORM处理
+func (u *User) BeforeSave(_ *gorm.DB) (err error) {
+	// 密码加密
+	u.Password = ScryptPassword(u.Password)
+	return
+}
 
 // IsUserExist 查询用户是否存在
 func IsUserExist(name string) (code int) {
@@ -49,7 +55,7 @@ func AddUser(data *User) int {
 
 // DeleteUser 删除用户(soft delete)
 func DeleteUser(id int) int {
-	err = db.Where("id = ? ", id).Delete(&User{}).Error
+	err := db.Where("id = ? ", id).Delete(&User{}).Error
 	if err != nil {
 		return errormsg.ERROR
 	}
@@ -85,7 +91,7 @@ func GetUserList(username string, pageSize int, pageNum int) ([]User, int64) {
 		err := db.Select("id, username, role, created_at").Limit(pageSize).Offset(offSet).Find(&userList).Error
 		db.Model(&userList).Count(&total)
 
-		if err != nil && err != gorm.ErrRecordNotFound {
+		if err != nil && !errors.Is(err, gorm.ErrRecordNotFound) {
 			return nil, 0
 		}
 
@@ -99,7 +105,7 @@ func GetUserList(username string, pageSize int, pageNum int) ([]User, int64) {
 			Limit(pageSize).Offset(offSet).Find(&userList).Error
 		db.Model(&userList).Where("username LIKE ?", username+"%").Count(&total)
 
-		if err != nil && err != gorm.ErrRecordNotFound {
+		if err != nil && !errors.Is(err, gorm.ErrRecordNotFound) {
 			return nil, 0
 		}
 		return userList, total
@@ -207,9 +213,12 @@ func ScryptPassword(password string) string {
 	return FinalPassword
 }
 
-// BeforeSave 开始事务前，由GORM处理
-func (u *User) BeforeSave(_ *gorm.DB) (err error) {
-	// 密码加密
-	u.Password = ScryptPassword(u.Password)
-	return
+// AdjustToolsPageAccess 调整用户是否可以查看工具类页面 TODO
+func (u *User) AdjustToolsPageAccess(result int8) error {
+	if u.ID == 0 {
+		return errors.New("用户ID不得为空")
+	}
+	err := db.Model(u).Where("id = ?", u.ID).Update("is_access_tools", result).Error
+
+	return err
 }

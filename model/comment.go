@@ -119,7 +119,7 @@ func PassTheComment(id int, data *Comment) int {
 	// 更新评论状态
 	updateMap["status"] = data.Status
 
-	err = db.Model(&comment).Where("id = ? ", id).
+	err := db.Model(&comment).Where("id = ? ", id).
 		Updates(updateMap).
 		Find(&res).Error
 
@@ -145,7 +145,7 @@ func RemoveTheComment(id int, data *Comment) int {
 	// 更新评论状态
 	updateMap["status"] = data.Status
 
-	err = db.Model(&comment).Where("id = ? ", id).
+	err := db.Model(&comment).Where("id = ? ", id).
 		Updates(updateMap).
 		Find(&res).Error
 

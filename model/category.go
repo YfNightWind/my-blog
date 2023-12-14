@@ -1,6 +1,7 @@
 package model
 
 import (
+	"errors"
 	"github.com/YfNightWind/my-blog/utils/errormsg"
 	"gorm.io/gorm"
 )
@@ -9,10 +10,6 @@ type Category struct {
 	ID   uint   `gorm:"primary_key;auto_increment" json:"id"`
 	Name string `gorm:"type:varchar(20);not null" json:"name"`
 }
-
-// =============
-// 对数据库的操作👇
-// =============
 
 // IsCategoryExist 查询分类是否存在
 func IsCategoryExist(name string) (code int) {
@@ -58,9 +55,9 @@ func GetCategoryList(pageSize int, pageNum int) ([]Category, int64) {
 		offSet = -1
 	}
 
-	err = db.Limit(pageSize).Offset(offSet).Find(&categoryList).Count(&total).Error
+	err := db.Limit(pageSize).Offset(offSet).Find(&categoryList).Count(&total).Error
 
-	if err != nil && err != gorm.ErrRecordNotFound {
+	if err != nil && !errors.Is(err, gorm.ErrRecordNotFound) {
 		return nil, 0
 	}
 	return categoryList, total
@@ -82,7 +79,7 @@ func EditCategory(id int, data *Category) int {
 
 // DeleteCategory 删除分类
 func DeleteCategory(id int) int {
-	err = db.Where("id = ? ", id).Delete(&Category{}).Error
+	err := db.Where("id = ? ", id).Delete(&Category{}).Error
 	if err != nil {
 		return errormsg.ERROR
 	}
