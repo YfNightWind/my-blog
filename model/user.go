@@ -64,7 +64,7 @@ func DeleteUser(id int) int {
 }
 
 // GetUser 查询单个用户
-func GetUser(id int) (User, int) {
+func (u *User) GetUser(id int) (User, int) {
 	var user User
 
 	err := db.Where("id = ? ", id).Find(&user).Error
@@ -145,7 +145,7 @@ func EditUser(id int, data *User) int {
 }
 
 // ChangePassword 修改密码
-func ChangePassword(id int, data *User) int {
+func (u *User) ChangePassword(id int, data *User) int {
 
 	err := db.Select("password").Where("id = ? ", id).Updates(&data).Error
 
@@ -213,12 +213,17 @@ func ScryptPassword(password string) string {
 	return FinalPassword
 }
 
-// AdjustToolsPageAccess 调整用户是否可以查看工具类页面 TODO
-func (u *User) AdjustToolsPageAccess(result int8) error {
+// AdjustToolsPageAccess 调整用户是否可以查看工具类页面
+// 传递 1 的时候，可以显示；传递 0 的时候不显示
+func (u *User) AdjustToolsPageAccess(result int) (error, int32) {
 	if u.ID == 0 {
-		return errors.New("用户ID不得为空")
+		return errors.New("用户ID不得为空"), errormsg.ERROR
 	}
 	err := db.Model(u).Where("id = ?", u.ID).Update("is_access_tools", result).Error
 
-	return err
+	if err != nil {
+		return err, errormsg.ACCESS_CHANGE_ERROR
+	}
+
+	return err, errormsg.SUCCESS
 }

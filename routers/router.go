@@ -45,11 +45,11 @@ func InitRouter() {
 	public := r.Group("api")
 	{
 		// 用户模块的路由接口
-		public.GET("users", controller.GetUserListController)       // 获取用户列表
-		public.GET("user/:id", controller.GetUserController)        // 查询单个用户
-		public.POST("user/add", controller.AddUserController)       // 用户注册
-		public.POST("login", controller.AdminLoginController)       // 后台登录
-		public.POST("front/login", controller.FrontLoginController) // 前台登录
+		public.GET("users", controller.UserController{}.GetUserListController) // 获取用户列表
+		public.GET("user/:id", controller.UserController{}.GetUserController)  // 查询单个用户
+		public.POST("user/add", controller.UserController{}.AddUserController) // 用户注册
+		public.POST("login", controller.AdminLoginController)                  // 后台登录
+		public.POST("front/login", controller.FrontLoginController)            // 前台登录
 
 		// 分类模块的路由接口
 		public.GET("category", controller.GetCategoryListController) // 获取分类列表
@@ -77,9 +77,9 @@ func InitRouter() {
 	authorized.Use(middleware.JwtToken())
 	{
 		// 用户模块的路由接口
-		authorized.PUT("user/:id", controller.EditUserController)                       // 编辑用户
-		authorized.DELETE("user/:id", controller.DeleteUserController)                  // 删除用户
-		authorized.PUT("user/change/password/:id", controller.ChangePasswordController) // 修改密码
+		authorized.PUT("user/:id", controller.UserController{}.EditUserController)                       // 编辑用户
+		authorized.DELETE("user/:id", controller.UserController{}.DeleteUserController)                  // 删除用户
+		authorized.PUT("user/change/password/:id", controller.UserController{}.ChangePasswordController) // 修改密码
 
 		// 分类模块的路由接口
 		authorized.POST("category/add", controller.CreateCategoryController)   // 添加分类

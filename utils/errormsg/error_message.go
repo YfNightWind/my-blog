@@ -13,6 +13,7 @@ const (
 	ERROR_TOKEN_RUNTIME    = 1006
 	ERROR_TOKEN_WRONG      = 1007
 	ERROR_TOKEN_TYPE_WRONG = 1008
+	ACCESS_CHANGE_ERROR    = 1009
 
 	// code = 200...文章模块的错误
 	ERROR_ARTICLE_NOT_EXIST = 2001
@@ -34,6 +35,7 @@ var codeMsg = map[int]string{
 	ERROR_TOKEN_RUNTIME:    "token过期",
 	ERROR_TOKEN_WRONG:      "token错误",
 	ERROR_TOKEN_TYPE_WRONG: "token格式错误",
+	ACCESS_CHANGE_ERROR:    "权限更改错误",
 
 	ERROR_CATEGORYNAME_USED:  "该分类已存在",
 	ERROR_CATEGORY_NOT_EXIST: "该分类不存在",

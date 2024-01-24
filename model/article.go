@@ -146,7 +146,7 @@ func EditArticle(id int, data *Article) int {
 
 // DeleteArticle 删除分类
 func DeleteArticle(id int) int {
-	err = db.Where("id = ? ", id).Delete(&Article{}).Error
+	err := db.Where("id = ? ", id).Delete(&Article{}).Error
 	if err != nil {
 		return errormsg.ERROR
 	}
